@@ -1,0 +1,81 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.33.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: 5bb031890bf25ca73140d9ad4937035e5ee5153e51d04942fe37b37a92ba3225
+
+name:           raspi-finance-reports
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/githubuser/raspi-finance-reports#readme>
+homepage:       https://github.com/bitexplorer/raspi-finance-reports#readme
+bug-reports:    https://github.com/bitexplorer/raspi-finance-reports/issues
+author:         Brian Henning
+maintainer:     henninb@msn.com
+copyright:      2020
+license:        BSD3
+build-type:     Simple
+extra-source-files:
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/bitexplorer/raspi-finance-reports
+
+library
+  exposed-modules:
+      Lib
+  other-modules:
+      Paths_raspi_finance_reports
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+  default-language: Haskell2010
+
+executable raspi-finance-reports-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_raspi_finance_reports
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      MissingH
+    , aeson
+    , aeson-casing
+    , aeson-pretty
+    , base >=4.7 && <5
+    , bytestring
+    , directory
+    , http-client
+    , http-conduit
+    , lens
+    , lens-aeson
+    , mtl
+    , numbers
+    , optparse-applicative
+    , postgresql-simple
+    , pretty-simple
+    , raspi-finance-reports
+    , scientific
+    , text
+    , time
+    , transformers
+    , vector
+    , wreq
+  default-language: Haskell2010
+
+test-suite raspi-finance-reports-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_raspi_finance_reports
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , raspi-finance-reports
+  default-language: Haskell2010

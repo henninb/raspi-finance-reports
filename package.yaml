@@ -1,0 +1,68 @@
+name:                raspi-finance-reports
+version:             0.1.0.0
+github:              "bitexplorer/raspi-finance-reports"
+license:             BSD3
+author:              "Brian Henning"
+maintainer:          "henninb@msn.com"
+copyright:           "2020"
+
+extra-source-files:
+- README.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on GitHub at <https://github.com/githubuser/raspi-finance-reports#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+
+library:
+  source-dirs: src
+
+executables:
+  raspi-finance-reports-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - raspi-finance-reports
+    - postgresql-simple
+    - time
+    - directory
+    - bytestring
+    - aeson
+    - aeson-casing
+    - lens
+    - MissingH
+    - numbers
+    - scientific
+    - optparse-applicative
+    - text
+    - http-conduit
+    - transformers
+    - mtl
+    - vector
+    - http-client
+    - lens-aeson
+    - wreq
+    - aeson-pretty
+    - pretty-simple
+
+tests:
+  raspi-finance-reports-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - raspi-finance-reports

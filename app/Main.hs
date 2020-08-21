@@ -1,10 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TemplateHaskell #-}
-{-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric  #-}
-{-# LANGUAGE DeriveDataTypeable #-}
-{-# LANGUAGE RecordWildCards #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Main where
 
 import Lib
@@ -105,14 +100,14 @@ selectAllAccounts :: Connection -> IO [Account]
 selectAllAccounts connection = query_ connection "SELECT account_name_owner,account_id,account_type,active_status,moniker FROM t_account" :: IO [Account]
 
 printOutstandingTransactions :: Transaction -> IO ()
-printOutstandingTransactions transaction = do
+printOutstandingTransactions transaction =
   when (transactionCleared transaction == 0) $ print (transactionDescription transaction)
 
 count:: [Transaction] -> Int
-count xs = foldr (\ x -> (+) 1) 0 xs
+count = foldr (\ x -> (+) 1) 0
 
 addTransactions:: [Transaction] -> Scientific
-addTransactions xs = foldr (\ x -> (+) (transactionAmount x)) 0.0 xs
+addTransactions = foldr ((+) . transactionAmount) 0.0
 
 countOutstanding :: Num a => [Transaction] -> a
 countOutstanding []  = 0
@@ -124,7 +119,10 @@ isFuture x = transactionCleared x == 1
 isCredit x = transactionAccountType x == "credit"
 isDebit x = transactionAccountType x == "debit"
 
+transactionCredits :: [Transaction] -> [Transaction]
 transactionCredits = filter isCredit
+
+transactionDebits :: [Transaction] -> [Transaction]
 transactionDebits = filter isDebit
 
 main :: IO ()

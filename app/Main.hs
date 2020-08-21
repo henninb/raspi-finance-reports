@@ -156,5 +156,6 @@ main = do
   print (length debits)
   print (addTransactions credits)
   print (addTransactions debits)
+  putStrLn "--- need to search by fuel and restaurant ---"
   putStrLn "--- separated ---"
 

@@ -118,12 +118,16 @@ isCleared x = transactionCleared x == 1
 isFuture x = transactionCleared x == 1
 isCredit x = transactionAccountType x == "credit"
 isDebit x = transactionAccountType x == "debit"
+isReoccurring x = transactionReoccurring x
 
 transactionCredits :: [Transaction] -> [Transaction]
 transactionCredits = filter isCredit
 
 transactionDebits :: [Transaction] -> [Transaction]
 transactionDebits = filter isDebit
+
+transactionsReoccurring :: [Transaction] -> [Transaction]
+transactionsReoccurring = filter isReoccurring
 
 main :: IO ()
 main = do
@@ -149,6 +153,7 @@ main = do
   accounts <- selectAllAccounts connection
   let credits = transactionCredits transactions
   let debits = transactionDebits transactions
+  let reoccurring = transactionsReoccurring transactions
   print (length transactions)
   print (length accounts)
   print (countOutstanding transactions)
@@ -156,6 +161,7 @@ main = do
   print (length debits)
   print (addTransactions credits)
   print (addTransactions debits)
+  print (length reoccurring)
   putStrLn "--- need to search by fuel and restaurant ---"
   putStrLn "--- separated ---"
 

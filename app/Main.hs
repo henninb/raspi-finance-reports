@@ -143,7 +143,7 @@ lookupTransactionMap :: String -> Map String Transaction -> Maybe Transaction
 lookupTransactionMap = Map.lookup
 
 sizeOfTransactionMap :: Map k a -> Int
-sizeOfTransactionMap t = Map.size t
+sizeOfTransactionMap = Map.size
 
 transactionCredits :: [Transaction] -> [Transaction]
 transactionCredits = filter isCredit

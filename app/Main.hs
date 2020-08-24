@@ -34,6 +34,9 @@ import Network.Wreq
 --import Control.Lens (^.)
 import Data.Aeson.Lens
 
+import qualified Data.Map.Strict as Map
+import Data.Map (Map())
+
 -- import System.Locale (defaultTimeLocale)
 import Data.Time.Format (formatTime)
 import Data.Time.Clock
@@ -93,6 +96,12 @@ data Transaction = Transaction
 instance FromRow Transaction
 instance ToRow Transaction
 
+parseDay :: String -> Day
+parseDay = parseTimeOrError True defaultTimeLocale "%Y-%m-%d"
+
+transaction :: Transaction
+transaction = Transaction "guid" "desc" "cat" "type" "account" "note" 1 0 0 True (parseDay "2020-01-01") 0.0
+
 selectAllTransactions :: Connection -> IO [Transaction]
 selectAllTransactions connection = query_ connection "SELECT guid,description,category,account_type,account_name_owner,notes,cleared,account_id,transaction_id,reoccurring,transaction_date,amount FROM t_transaction" :: IO [Transaction]
 
@@ -118,7 +127,23 @@ isCleared x = transactionCleared x == 1
 isFuture x = transactionCleared x == 1
 isCredit x = transactionAccountType x == "credit"
 isDebit x = transactionAccountType x == "debit"
-isReoccurring x = transactionReoccurring x
+-- isReoccurring :: Transaction -> Bool
+isReoccurring = transactionReoccurring
+
+myMap :: Map Int String
+myMap = Map.fromList [(5,"a"), (3,"b"), (5, "c")]
+
+transactionTuple :: Transaction -> [(String, Transaction)]
+transactionTuple t = [(transactionDescription t, t)]
+
+transactionsMap :: Map String Transaction
+transactionsMap = Map.fromList (transactionTuple transaction)
+
+lookupTransactionMap :: String -> Map String Transaction -> Maybe Transaction
+lookupTransactionMap = Map.lookup
+
+sizeOfTransactionMap :: Map k a -> Int
+sizeOfTransactionMap t = Map.size t
 
 transactionCredits :: [Transaction] -> [Transaction]
 transactionCredits = filter isCredit

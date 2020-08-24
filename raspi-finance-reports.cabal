@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 5bb031890bf25ca73140d9ad4937035e5ee5153e51d04942fe37b37a92ba3225
+-- hash: b6ad62bea491422425c9758b815e8c0fd32953a5b1521e86ecfc2907a4376ae3
 
 name:           raspi-finance-reports
 version:        0.1.0.0
@@ -48,6 +48,7 @@ executable raspi-finance-reports-exe
     , aeson-pretty
     , base >=4.7 && <5
     , bytestring
+    , containers
     , directory
     , http-client
     , http-conduit

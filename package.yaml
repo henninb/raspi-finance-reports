@@ -55,6 +55,7 @@ executables:
     - wreq
     - aeson-pretty
     - pretty-simple
+    - containers
 
 tests:
   raspi-finance-reports-test:

@@ -156,11 +156,10 @@ transactionsReoccurring :: [Transaction] -> [Transaction]
 transactionsReoccurring = filter isReoccurring
 
 extractCategories :: [Transaction] -> [String]
-extractCategories xs = do
-     x <- xs
-     return $ transactionCategory x
+extractCategories xs = do transactionCategory <$> xs
 
-stringSortGroup myList = map (head &&& length) $ group $ sort myList
+sortAndGroupByList :: Ord a => [a] -> [(a, Int)]
+sortAndGroupByList myList = map (head &&& length) $ group $ sort myList
 
 main :: IO ()
 main = do
@@ -196,8 +195,8 @@ main = do
   print (addTransactions debits)
   print (length reoccurring)
   let categoriesList = extractCategories transactions
-  let categoriesMap = stringSortGroup categoriesList
-  print categoriesMap
+  let categoriesCount = sortAndGroupByList categoriesList
+  print categoriesCount
 --  print (sizeOfTransactionMap categoriesMap)
   putStrLn "--- need to search by fuel and restaurant ---"
   putStrLn "--- separated ---"

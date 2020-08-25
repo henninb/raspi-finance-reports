@@ -113,8 +113,8 @@ printOutstandingTransactions :: Transaction -> IO ()
 printOutstandingTransactions transaction =
   when (transactionCleared transaction == 0) $ print (transactionDescription transaction)
 
-count:: [Transaction] -> Int
-count = foldr (\ x -> (+) 1) 0
+countTransactionsList:: [Transaction] -> Int
+countTransactionsList = foldr (\ x -> (+) 1) 0
 
 addTransactions:: [Transaction] -> Scientific
 addTransactions = foldr ((+) . transactionAmount) 0.0

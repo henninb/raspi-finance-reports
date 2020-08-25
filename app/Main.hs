@@ -175,10 +175,10 @@ main = do
   putStrLn programName
 
   putStrLn "--- separated ---"
-  postgreqlUsername <- lookupEnv "POSTGRESQL_USESRNAME"
-  print postgreqlUsername
-  postgreqlPassword <- lookupEnv "POSTGRESQL_PASSWORD"
-  print postgreqlPassword
+  postgresqlUsername <- lookupEnv "POSTGRESQL_USESRNAME"
+  print postgresqlUsername
+  postgresqlPassword <- lookupEnv "POSTGRESQL_PASSWORD"
+  print postgresqlPassword
   putStrLn "--- separated ---"
   connection <- connect defaultConnectInfo { connectHost = "localhost", connectDatabase = "finance_db", connectUser = "henninb", connectPassword = "monday1"}
   transactions <- selectAllTransactions connection

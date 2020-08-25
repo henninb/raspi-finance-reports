@@ -36,6 +36,7 @@ import Data.Aeson.Lens
 
 import qualified Data.Map.Strict as Map
 import Data.Map (Map())
+import Control.Arrow
 
 -- import System.Locale (defaultTimeLocale)
 import Data.Time.Format (formatTime)
@@ -130,20 +131,20 @@ isDebit x = transactionAccountType x == "debit"
 -- isReoccurring :: Transaction -> Bool
 isReoccurring = transactionReoccurring
 
-myMap :: Map Int String
-myMap = Map.fromList [(5,"a"), (3,"b"), (5, "c")]
+--myMap :: Map Int String
+--myMap = Map.fromList [(5,"a"), (3,"b"), (5, "c")]
+--
+--transactionTuple :: Transaction -> [(String, Transaction)]
+--transactionTuple t = [(transactionDescription t, t)]
+--
+--transactionsMap :: Map String Transaction
+--transactionsMap = Map.fromList (transactionTuple transaction)
 
-transactionTuple :: Transaction -> [(String, Transaction)]
-transactionTuple t = [(transactionDescription t, t)]
-
-transactionsMap :: Map String Transaction
-transactionsMap = Map.fromList (transactionTuple transaction)
-
-lookupTransactionMap :: String -> Map String Transaction -> Maybe Transaction
-lookupTransactionMap = Map.lookup
-
-sizeOfTransactionMap :: Map k a -> Int
-sizeOfTransactionMap = Map.size
+--lookupTransactionMap :: String -> Map String Transaction -> Maybe Transaction
+--lookupTransactionMap = Map.lookup
+--
+--sizeOfTransactionMap :: Map k a -> Int
+--sizeOfTransactionMap = Map.size
 
 transactionCredits :: [Transaction] -> [Transaction]
 transactionCredits = filter isCredit
@@ -153,6 +154,13 @@ transactionDebits = filter isDebit
 
 transactionsReoccurring :: [Transaction] -> [Transaction]
 transactionsReoccurring = filter isReoccurring
+
+extractCategories :: [Transaction] -> [String]
+extractCategories xs = do
+     x <- xs
+     return $ transactionCategory x
+
+stringSortGroup myList = map (head &&& length) $ group $ sort myList
 
 main :: IO ()
 main = do
@@ -187,6 +195,10 @@ main = do
   print (addTransactions credits)
   print (addTransactions debits)
   print (length reoccurring)
+  let categoriesList = extractCategories transactions
+  let categoriesMap = stringSortGroup categoriesList
+  print categoriesMap
+--  print (sizeOfTransactionMap categoriesMap)
   putStrLn "--- need to search by fuel and restaurant ---"
   putStrLn "--- separated ---"
 

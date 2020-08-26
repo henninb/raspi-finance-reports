@@ -101,13 +101,16 @@ parseDay :: String -> Day
 parseDay = parseTimeOrError True defaultTimeLocale "%Y-%m-%d"
 
 transaction :: Transaction
-transaction = Transaction "guid" "desc" "cat" "type" "account" "note" 1 0 0 True (parseDay "2020-01-01") 0.0
+transaction = Transaction "653fc2a9-14b9-4318-bcb3-178c59458f61" "test" "test" "credit" "chase_kari" "" 1 1013 1 True (parseDay "2020-12-31") 0.0
 
 selectAllTransactions :: Connection -> IO [Transaction]
 selectAllTransactions connection = query_ connection "SELECT guid,description,category,account_type,account_name_owner,notes,cleared,account_id,transaction_id,reoccurring,transaction_date,amount FROM t_transaction" :: IO [Transaction]
 
 selectAllAccounts :: Connection -> IO [Account]
 selectAllAccounts connection = query_ connection "SELECT account_name_owner,account_id,account_type,active_status,moniker FROM t_account" :: IO [Account]
+
+insertTransaction :: Connection -> Transaction -> IO Int64
+insertTransaction connection = execute connection "INSERT INTO t_transaction (guid,description,category,account_type,account_name_owner,notes,cleared,account_id,transaction_id,reoccurring,transaction_date,amount) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"
 
 printOutstandingTransactions :: Transaction -> IO ()
 printOutstandingTransactions transaction =
@@ -197,6 +200,8 @@ main = do
   let categoriesList = extractCategories transactions
   let categoriesCount = sortAndGroupByList categoriesList
   print categoriesCount
+  x <- insertTransaction connection transaction
+  print x
 --  print (sizeOfTransactionMap categoriesMap)
   putStrLn "--- need to search by fuel and restaurant ---"
   putStrLn "--- separated ---"

@@ -56,7 +56,7 @@ executables:
     - aeson-pretty
     - pretty-simple
     - containers
-
+    #- Spock-0.13.0.0
 tests:
   raspi-finance-reports-test:
     main:                Spec.hs

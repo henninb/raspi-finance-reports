@@ -38,6 +38,9 @@ import qualified Data.Map.Strict as Map
 import Data.Map (Map())
 import Control.Arrow
 
+--import Web.Spock
+--import Web.Spock.Config
+
 -- import System.Locale (defaultTimeLocale)
 import Data.Time.Format (formatTime)
 import Data.Time.Clock
@@ -86,7 +89,7 @@ data Transaction = Transaction
       transactionAccountType :: String,
       transactionAccountNameOwner :: String,
       transactionNotes :: String,
-      transactionCleared  :: Integer,
+      transactionTransactionState  :: String,
       transactionAccountId  :: Integer,
       transactionTransactionId  :: Integer,
       transactionReoccurring   :: Bool,
@@ -101,20 +104,20 @@ parseDay :: String -> Day
 parseDay = parseTimeOrError True defaultTimeLocale "%Y-%m-%d"
 
 transaction :: Transaction
-transaction = Transaction "653fc2a9-14b9-4318-bcb3-178c59458f61" "test" "test" "credit" "chase_kari" "" 1 1013 1 True (parseDay "2020-12-31") 0.0
+transaction = Transaction "653fc2a9-14b9-4318-bcb3-178c59458f61" "test" "test" "credit" "chase_kari" "" "cleared" 1013 1 True (parseDay "2020-12-31") 0.0
 
 selectAllTransactions :: Connection -> IO [Transaction]
-selectAllTransactions connection = query_ connection "SELECT guid,description,category,account_type,account_name_owner,notes,cleared,account_id,transaction_id,reoccurring,transaction_date,amount FROM t_transaction" :: IO [Transaction]
+selectAllTransactions connection = query_ connection "SELECT guid,description,category,account_type,account_name_owner,notes,transaction_state,account_id,transaction_id,reoccurring,transaction_date,amount FROM t_transaction" :: IO [Transaction]
 
 selectAllAccounts :: Connection -> IO [Account]
 selectAllAccounts connection = query_ connection "SELECT account_name_owner,account_id,account_type,active_status,moniker FROM t_account" :: IO [Account]
 
 insertTransaction :: Connection -> Transaction -> IO Int64
-insertTransaction connection = execute connection "INSERT INTO t_transaction (guid,description,category,account_type,account_name_owner,notes,cleared,account_id,transaction_id,reoccurring,transaction_date,amount) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"
+insertTransaction connection = execute connection "INSERT INTO t_transaction (guid,description,category,account_type,account_name_owner,notes,transaction_state,account_id,transaction_id,reoccurring,transaction_date,amount) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"
 
 printOutstandingTransactions :: Transaction -> IO ()
 printOutstandingTransactions transaction =
-  when (transactionCleared transaction == 0) $ print (transactionDescription transaction)
+  when (transactionTransactionState transaction == "cleared") $ print (transactionDescription transaction)
 
 countTransactionsList:: [Transaction] -> Int
 countTransactionsList = foldr (\ x -> (+) 1) 0
@@ -124,11 +127,11 @@ addTransactions = foldr ((+) . transactionAmount) 0.0
 
 countOutstanding :: Num a => [Transaction] -> a
 countOutstanding []  = 0
-countOutstanding (x:xs) =  if transactionCleared x == 0 then 1 + countOutstanding xs else 0 + countOutstanding xs
+countOutstanding (x:xs) =  if transactionTransactionState x == "cleared" then 1 + countOutstanding xs else 0 + countOutstanding xs
 
-isOutstanding x = transactionCleared x == 0
-isCleared x = transactionCleared x == 1
-isFuture x = transactionCleared x == 1
+isOutstanding x = transactionTransactionState x == "outstanding"
+isCleared x = transactionTransactionState x == "cleared"
+isFuture x = transactionTransactionState x == "cleared"
 isCredit x = transactionAccountType x == "credit"
 isDebit x = transactionAccountType x == "debit"
 -- isReoccurring :: Transaction -> Bool

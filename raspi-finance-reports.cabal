@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b6ad62bea491422425c9758b815e8c0fd32953a5b1521e86ecfc2907a4376ae3
+-- hash: f9b438485654a70789ae75d1a09c192d4d5c42a3814479a998294d310a79f21a
 
 name:           raspi-finance-reports
 version:        0.1.0.0
@@ -43,6 +43,7 @@ executable raspi-finance-reports-exe
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       MissingH
+    , MonadRandom
     , aeson
     , aeson-casing
     , aeson-pretty
@@ -59,11 +60,13 @@ executable raspi-finance-reports-exe
     , optparse-applicative
     , postgresql-simple
     , pretty-simple
+    , random
     , raspi-finance-reports
     , scientific
     , text
     , time
     , transformers
+    , uuid
     , vector
     , wreq
   default-language: Haskell2010

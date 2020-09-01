@@ -56,6 +56,9 @@ executables:
     - aeson-pretty
     - pretty-simple
     - containers
+    - uuid
+    - random
+    - MonadRandom
     #- Spock-0.13.0.0
 tests:
   raspi-finance-reports-test:

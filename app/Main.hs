@@ -63,8 +63,22 @@ import System.IO
 -- import Text.Parse
 import Options.Applicative
 import Data.Semigroup ((<>))
+import Data.UUID
+import System.Random
+import Control.Monad.Random.Strict
+import qualified Data.UUID.V4 as U4
 
+type AnotherType = String
+data MyType = MyType {
+   uuid :: UUID,
+   elements :: AnotherType
+} deriving (Show)
 
+type M = Rand StdGen
+
+-- smart constructor for MyType with unique UUID
+myType :: AnotherType -> M MyType
+myType x = MyType <$> getRandom <*> pure x
 
 data Category = Category
     {category :: String,
@@ -102,6 +116,16 @@ instance ToRow Transaction
 
 parseDay :: String -> Day
 parseDay = parseTimeOrError True defaultTimeLocale "%Y-%m-%d"
+
+someUUIDs :: [UUID]
+someUUIDs =
+  let seed = 137
+      g0 = mkStdGen seed -- RNG from seed
+      (u1, g1) = random g0
+      (u2, g2) = random g1
+      (u3, g3) = random g2
+      (u4, g4) = random g3
+  in [u1,u2,u3,u4]
 
 transaction :: Transaction
 transaction = Transaction "653fc2a9-14b9-4318-bcb3-178c59458f61" "test" "test" "credit" "chase_kari" "" "cleared" 1013 1 True (parseDay "2020-12-31") 0.0
@@ -203,6 +227,7 @@ main = do
   let categoriesList = extractCategories transactions
   let categoriesCount = sortAndGroupByList categoriesList
   print categoriesCount
+  print someUUIDs
   x <- insertTransaction connection transaction
   print x
 --  print (sizeOfTransactionMap categoriesMap)

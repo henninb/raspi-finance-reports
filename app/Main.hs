@@ -107,6 +107,7 @@ data Transaction = Transaction
       transactionAccountId  :: Integer,
       transactionTransactionId  :: Integer,
       transactionReoccurring   :: Bool,
+      transactionActiveStatus  :: Bool,
       transactionTransactionDate  :: Day,
       transactionAmount   :: Scientific
     } deriving (Show, Eq, Generic, Ord)
@@ -128,16 +129,16 @@ someUUIDs =
   in [u1,u2,u3,u4]
 
 transaction :: Transaction
-transaction = Transaction "653fc2a9-14b9-4318-bcb3-178c59458f61" "test" "test" "credit" "chase_kari" "" "cleared" 1013 1 True (parseDay "2020-12-31") 0.0
+transaction = Transaction "653fc2a9-14b9-4318-bcb3-178c59458f61" "test" "test" "credit" "chase_kari" "" "cleared" 1013 1 True True (parseDay "2020-12-31") 0.0
 
 selectAllTransactions :: Connection -> IO [Transaction]
-selectAllTransactions connection = query_ connection "SELECT guid,description,category,account_type,account_name_owner,notes,transaction_state,account_id,transaction_id,reoccurring,transaction_date,amount FROM t_transaction" :: IO [Transaction]
+selectAllTransactions connection = query_ connection "SELECT guid,description,category,account_type,account_name_owner,notes,transaction_state,account_id,transaction_id,reoccurring,active_status,transaction_date,amount FROM t_transaction" :: IO [Transaction]
 
 selectAllAccounts :: Connection -> IO [Account]
 selectAllAccounts connection = query_ connection "SELECT account_name_owner,account_id,account_type,active_status,moniker FROM t_account" :: IO [Account]
 
 insertTransaction :: Connection -> Transaction -> IO Int64
-insertTransaction connection = execute connection "INSERT INTO t_transaction (guid,description,category,account_type,account_name_owner,notes,transaction_state,account_id,transaction_id,reoccurring,transaction_date,amount) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)"
+insertTransaction connection = execute connection "INSERT INTO t_transaction (guid,description,category,account_type,account_name_owner,notes,transaction_state,account_id,transaction_id,reoccurring,active_status,transaction_date,amount) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)"
 
 printOutstandingTransactions :: Transaction -> IO ()
 printOutstandingTransactions transaction =

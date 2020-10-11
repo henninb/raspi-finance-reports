@@ -23,17 +23,7 @@ dependencies:
 
 library:
   source-dirs: src
-
-executables:
-  raspi-finance-reports-exe:
-    main:                Main.hs
-    source-dirs:         app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - raspi-finance-reports
+  dependencies:
     - postgresql-simple
     - time
     - directory
@@ -59,7 +49,18 @@ executables:
     - uuid
     - random
     - MonadRandom
-    #- Spock-0.13.0.0
+
+executables:
+  raspi-finance-reports-exe:
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - raspi-finance-reports
+    - postgresql-simple
 tests:
   raspi-finance-reports-test:
     main:                Spec.hs

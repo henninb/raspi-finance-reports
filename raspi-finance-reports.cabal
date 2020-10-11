@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f9b438485654a70789ae75d1a09c192d4d5c42a3814479a998294d310a79f21a
+-- hash: 100b58d36aa9fbfaaa4075e7a2948f76cb6597f474cbeb48cea574068498151f
 
 name:           raspi-finance-reports
 version:        0.1.0.0
@@ -25,22 +25,11 @@ source-repository head
 
 library
   exposed-modules:
-      Lib
+      Finance
   other-modules:
       Paths_raspi_finance_reports
   hs-source-dirs:
       src
-  build-depends:
-      base >=4.7 && <5
-  default-language: Haskell2010
-
-executable raspi-finance-reports-exe
-  main-is: Main.hs
-  other-modules:
-      Paths_raspi_finance_reports
-  hs-source-dirs:
-      app
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       MissingH
     , MonadRandom
@@ -61,7 +50,6 @@ executable raspi-finance-reports-exe
     , postgresql-simple
     , pretty-simple
     , random
-    , raspi-finance-reports
     , scientific
     , text
     , time
@@ -69,6 +57,19 @@ executable raspi-finance-reports-exe
     , uuid
     , vector
     , wreq
+  default-language: Haskell2010
+
+executable raspi-finance-reports-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_raspi_finance_reports
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , postgresql-simple
+    , raspi-finance-reports
   default-language: Haskell2010
 
 test-suite raspi-finance-reports-test

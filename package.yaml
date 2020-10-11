@@ -72,3 +72,4 @@ tests:
     dependencies:
     - raspi-finance-reports
     - hspec
+    - time

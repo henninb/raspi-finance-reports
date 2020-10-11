@@ -5,7 +5,7 @@
 module Finance (lookupEnv, addTransactions, extractCategories,
                 countOutstanding, sortAndGroupByList, transactionsReoccurring, transactionDebits,
                 insertTransaction, selectAllTransactions, selectAllAccounts,
-                transactionCredits, someUUIDs, Account, Transaction) where
+                transactionCredits, someUUIDs, Account, Transaction, Transaction (..)) where
 
 import Data.Aeson
 import Data.Aeson.Casing

@@ -71,3 +71,4 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - raspi-finance-reports
+    - hspec

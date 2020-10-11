@@ -1,10 +1,20 @@
--- {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings #-}
 module Main where
 
 import Finance
 import Database.PostgreSQL.Simple
 import System.Exit
 import System.Environment
+import Data.Int
+
+-- insertTransaction :: Connection -> Transaction -> IO Int64
+-- insertTransaction connection = execute connection "INSERT INTO t_transaction (guid,description,category,account_type,account_name_owner,notes,transaction_state,account_id,transaction_id,reoccurring,active_status,transaction_date,amount) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)"
+
+-- selectAllTransactions :: Connection -> IO [Transaction]
+-- selectAllTransactions connection = query_ connection "SELECT guid,description,category,account_type,account_name_owner,notes,transaction_state,account_id,transaction_id,reoccurring,active_status,transaction_date,amount FROM t_transaction" :: IO [Transaction]
+
+-- selectAllAccounts :: Connection -> IO [Account]
+-- selectAllAccounts connection = query_ connection "SELECT account_name_owner,account_id,account_type,active_status,moniker FROM t_account" :: IO [Account]
 
 main :: IO ()
 main = do
@@ -39,8 +49,8 @@ main = do
   let categoriesCount = sortAndGroupByList categoriesList
   print categoriesCount
   print someUUIDs
---  x <- insertTransaction connection transaction
---  print x
+ -- x <- insertTransaction connection transaction
+ -- print x
 --  print (sizeOfTransactionMap categoriesMap)
   putStrLn "--- need to search by fuel and restaurant ---"
   putStrLn "--- separated ---"

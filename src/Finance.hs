@@ -1,8 +1,11 @@
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE DeriveGeneric  #-}
+{-# LANGUAGE DeriveAnyClass #-}
 
-module Finance (lookupEnv, insertTransaction, addTransactions, extractCategories,
-                countOutstanding,sortAndGroupByList, transactionsReoccurring, transactionDebits,
-                selectAllAccounts, transactionCredits, selectAllTransactions, someUUIDs) where
+module Finance (lookupEnv, addTransactions, extractCategories,
+                countOutstanding, sortAndGroupByList, transactionsReoccurring, transactionDebits,
+                insertTransaction, selectAllTransactions, selectAllAccounts,
+                transactionCredits, someUUIDs, Account, Transaction) where
 
 import Data.Aeson
 import Data.Aeson.Casing
@@ -52,7 +55,7 @@ import Database.PostgreSQL.Simple
 import Database.PostgreSQL.Simple.FromRow
 import Database.PostgreSQL.Simple.ToField
 import Database.PostgreSQL.Simple.ToRow
-import GHC.Generics (Generic)
+import GHC.Generics
 import Data.Ratio
 import Data.Int
 import Data.Number.CReal
@@ -77,13 +80,15 @@ data MyType = MyType {
 type M = Rand StdGen
 
 -- smart constructor for MyType with unique UUID
-myType :: AnotherType -> M MyType
-myType x = MyType <$> getRandom <*> pure x
+--myType :: AnotherType -> M MyType
+--myType x = MyType <$> getRandom <*> pure x
 
 data Category = Category
     {category :: String,
     categoryId  :: Integer
-    } deriving (Show, Generic, Eq)
+    } deriving (Show, Generic, Eq, ToJSON, FromJSON)
+instance FromRow Category
+instance ToRow Category
 
 data Account = Account
     {accountAccountNameOwner :: String,
@@ -91,7 +96,7 @@ data Account = Account
     accountAccountType  :: String,
     accountActiveStatus  :: Bool,
     accountMoniker  :: String
-    } deriving (Show, Eq, Generic, Ord)
+    } deriving (Show, Eq, Generic, Ord, ToJSON, FromJSON)
 
 instance FromRow Account
 instance ToRow Account
@@ -110,7 +115,7 @@ data Transaction = Transaction
       transactionActiveStatus  :: Bool,
       transactionTransactionDate  :: Day,
       transactionAmount   :: Scientific
-    } deriving (Show, Eq, Generic, Ord)
+    } deriving (Show, Eq, Ord, Generic, ToJSON, FromJSON)
 
 instance FromRow Transaction
 instance ToRow Transaction
@@ -130,15 +135,6 @@ someUUIDs =
 
 transaction :: Transaction
 transaction = Transaction "653fc2a9-14b9-4318-bcb3-178c59458f61" "test" "test" "credit" "chase_kari" "" "cleared" 1013 1 True True (parseDay "2020-12-31") 0.0
-
-selectAllTransactions :: Connection -> IO [Transaction]
-selectAllTransactions connection = query_ connection "SELECT guid,description,category,account_type,account_name_owner,notes,transaction_state,account_id,transaction_id,reoccurring,active_status,transaction_date,amount FROM t_transaction" :: IO [Transaction]
-
-selectAllAccounts :: Connection -> IO [Account]
-selectAllAccounts connection = query_ connection "SELECT account_name_owner,account_id,account_type,active_status,moniker FROM t_account" :: IO [Account]
-
-insertTransaction :: Connection -> Transaction -> IO Int64
-insertTransaction connection = execute connection "INSERT INTO t_transaction (guid,description,category,account_type,account_name_owner,notes,transaction_state,account_id,transaction_id,reoccurring,active_status,transaction_date,amount) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)"
 
 printOutstandingTransactions :: Transaction -> IO ()
 printOutstandingTransactions transaction =
@@ -172,8 +168,16 @@ transactionsReoccurring :: [Transaction] -> [Transaction]
 transactionsReoccurring = filter isReoccurring
 
 extractCategories :: [Transaction] -> [String]
-extractCategories xs = do transactionCategory <$> xs
+extractCategories xs = transactionCategory <$> xs
 
 sortAndGroupByList :: Ord a => [a] -> [(a, Int)]
 sortAndGroupByList myList = map (head &&& length) $ group $ sort myList
 
+insertTransaction :: Connection -> Transaction -> IO Int64
+insertTransaction connection = execute connection "INSERT INTO t_transaction (guid,description,category,account_type,account_name_owner,notes,transaction_state,account_id,transaction_id,reoccurring,active_status,transaction_date,amount) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)"
+
+selectAllTransactions :: Connection -> IO [Transaction]
+selectAllTransactions connection = query_ connection "SELECT guid,description,category,account_type,account_name_owner,notes,transaction_state,account_id,transaction_id,reoccurring,active_status,transaction_date,amount FROM t_transaction" :: IO [Transaction]
+
+selectAllAccounts :: Connection -> IO [Account]
+selectAllAccounts connection = query_ connection "SELECT account_name_owner,account_id,account_type,active_status,moniker FROM t_account" :: IO [Account]

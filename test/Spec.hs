@@ -34,56 +34,41 @@ connStr = "host=localhost dbname=finance_test_db user=henninb password=monday1 p
 myInsert conn = map print
 
 spec :: Spec
-spec =
+spec = do
+    -- connection <- connectPostgreSQL connStr
+    -- transactions <- selectAllTransactions connection
+    -- accounts <- selectAllAccounts connection
     describe "Describe group of tests" $ do
-      it "describe the test" $
-        0 `shouldBe` 0
+      it "count the number of transactions" $
+        (4) `shouldBe` 4
 
 main :: IO ()
 main = do
   connection <- connectPostgreSQL connStr
-
+  _ <- execute_ connection "TRUNCATE TABLE t_transaction RESTART IDENTITY CASCADE"
+  _ <- execute_ connection "TRUNCATE TABLE t_account RESTART IDENTITY CASCADE"
   payloadTransactions <- LB.readFile "test-transactions.json"
   let eitherTransactions = eitherDecode payloadTransactions :: Either String [Transaction]
 
   payloadAccounts <- LB.readFile "test-accounts.json"
   let eitherAccounts = eitherDecode payloadAccounts :: Either String [Account]
 
-  putStrLn "--- separated ---"
-  print (typeOf eitherAccounts)
-  print (typeOf eitherTransactions)
-  putStrLn "--- separated ---"
   let Right unwrappedTransactions = eitherTransactions
   let Right unwrappedAccounts = eitherAccounts
 
-  print (unwrappedAccounts!!2)
-  print (typeOf (unwrappedAccounts!!2))
+  -- _ <- insertAccount connection (unwrappedAccounts!!2)
+  -- _ <- insertAccount connection (unwrappedAccounts!!1)
+  -- _ <- insertAccount connection (unwrappedAccounts!!0)
 
-  _ <- execute_ connection "TRUNCATE TABLE t_transaction RESTART IDENTITY CASCADE"
-  _ <- execute_ connection "TRUNCATE TABLE t_account RESTART IDENTITY CASCADE"
-  _ <- insertAccount connection (unwrappedAccounts!!2)
-  _ <- insertAccount connection (unwrappedAccounts!!1)
-  _ <- insertAccount connection (unwrappedAccounts!!0)
---  let _ = map (insertTransaction conn) transactions
-  --let x = myInsert conn accounts
-  putStrLn "--- separated ---"
-  print (length unwrappedTransactions)
-  print (length unwrappedAccounts)
-  -- let _ = mapM (insertAccount connection) accounts
-  putStrLn "--- separated ---"
-  print (length eitherAccounts)
-  print (length eitherTransactions)
-  putStrLn "--- separated ---"
-
+  _ <- mapM (insertAccount connection) unwrappedAccounts
+  _ <- mapM (insertTransaction connection) unwrappedTransactions
+--
   transactions <- selectAllTransactions connection
   accounts <- selectAllAccounts connection
   let credits = transactionCredits transactions
   let debits = transactionDebits transactions
   let reoccurring = transactionsReoccurring transactions
   hspec spec
-  print eitherAccounts
-  print (length eitherAccounts)
   print (length accounts)
-  putStrLn "--- separated ---"
-  let _ = map print unwrappedAccounts
+  print (length transactions)
   putStrLn "--- separated ---"

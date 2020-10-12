@@ -19,6 +19,13 @@
     "accountActiveStatus": false,
     "accountMoniker": "0000",
     "accountAccountId": 1003
+  },
+  {
+    "accountAccountType": "credit",
+    "accountAccountNameOwner": "citi_brian",
+    "accountActiveStatus": false,
+    "accountMoniker": "0000",
+    "accountAccountId": 1004
   }
 ]
 

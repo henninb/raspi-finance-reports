@@ -16,7 +16,7 @@
   },
   {
     "transactionGuid": "653fc2a9-14b9-4318-bcb3-178c59458f62",
-    "transactionDescription": "Menards",
+    "transactionDescription": "menards",
     "transactionCategory": "",
     "transactionAccountType": "credit",
     "transactionAccountNameOwner": "chase_kari",
@@ -31,7 +31,7 @@
   },
   {
     "transactionGuid": "653fc2a9-14b9-4318-bcb3-178c59458f63",
-    "transactionDescription": "McDonalds",
+    "transactionDescription": "mcdonalds",
     "transactionCategory": "restaurant",
     "transactionAccountType": "credit",
     "transactionAccountNameOwner": "chase_brian",
@@ -46,7 +46,7 @@
   },
   {
     "transactionGuid": "653fc2a9-14b9-4318-bcb3-178c59458f64",
-    "transactionDescription": "Chick Fil A",
+    "transactionDescription": "chick fil a",
     "transactionCategory": "restaurant",
     "transactionAccountType": "credit",
     "transactionAccountNameOwner": "chase_brian",
@@ -54,9 +54,24 @@
     "transactionActiveStatus": false,
     "transactionTransactionState": "cleared",
     "transactionAccountId": 1002,
-    "transactionTransactionId": 1003,
+    "transactionTransactionId": 1004,
     "transactionReoccurring": false,
     "transactionTransactionDate": "2020-03-31",
     "transactionAmount": 18.33
+  },
+  {
+    "transactionGuid": "653fc2a9-14b9-4318-bcb3-178c59458f65",
+    "transactionDescription": "direct deposit",
+    "transactionCategory": "",
+    "transactionAccountType": "debit",
+    "transactionAccountNameOwner": "test_brian",
+    "transactionNotes": "",
+    "transactionActiveStatus": false,
+    "transactionTransactionState": "cleared",
+    "transactionAccountId": 1003,
+    "transactionTransactionId": 1005,
+    "transactionReoccurring": false,
+    "transactionTransactionDate": "2020-03-31",
+    "transactionAmount": 900.05
   }
 ]

@@ -56,10 +56,6 @@ main = do
   let Right unwrappedTransactions = eitherTransactions
   let Right unwrappedAccounts = eitherAccounts
 
-  -- _ <- insertAccount connection (unwrappedAccounts!!2)
-  -- _ <- insertAccount connection (unwrappedAccounts!!1)
-  -- _ <- insertAccount connection (unwrappedAccounts!!0)
-
   _ <- mapM (insertAccount connection) unwrappedAccounts
   _ <- mapM (insertTransaction connection) unwrappedTransactions
 --

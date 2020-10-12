@@ -73,3 +73,5 @@ tests:
     - raspi-finance-reports
     - hspec
     - time
+    - postgresql-simple
+    # - monad-mock

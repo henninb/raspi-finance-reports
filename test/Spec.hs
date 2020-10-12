@@ -28,11 +28,7 @@ account = Account "chase_kari" 1001 "credit"  True "0000"
 
 connStr :: ByteString
 connStr = "host=localhost dbname=finance_test_db user=henninb password=monday1 port=5432"
-
-
---myInsert conn = map (insertAccount conn)
-myInsert conn = map print
-
+--
 spec :: Spec
 spec = do
     -- connection <- connectPostgreSQL connStr

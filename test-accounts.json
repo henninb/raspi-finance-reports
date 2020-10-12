@@ -1,0 +1,24 @@
+[
+  {
+  "accountAccountType": "credit",
+  "accountAccountNameOwner": "chase_kari",
+  "accountActiveStatus": false,
+  "accountMoniker": "0000",
+  "accountAccountId": 1001
+  },
+  {
+    "accountAccountType": "credit",
+    "accountAccountNameOwner": "chase_brian",
+    "accountActiveStatus": false,
+    "accountMoniker": "0000",
+    "accountAccountId": 1002
+  },
+  {
+    "accountAccountType": "credit",
+    "accountAccountNameOwner": "test_brian",
+    "accountActiveStatus": false,
+    "accountMoniker": "0000",
+    "accountAccountId": 1003
+  }
+]
+

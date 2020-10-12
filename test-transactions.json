@@ -1,0 +1,62 @@
+[
+  {
+    "transactionGuid": "653fc2a9-14b9-4318-bcb3-178c59458f61",
+    "transactionDescription": "aliexpress.com",
+    "transactionCategory": "online",
+    "transactionAccountType": "credit",
+    "transactionAccountNameOwner": "chase_kari",
+    "transactionNotes": "",
+    "transactionActiveStatus": false,
+    "transactionTransactionState": "cleared",
+    "transactionAccountId": 1001,
+    "transactionTransactionId": 1001,
+    "transactionReoccurring": false,
+    "transactionTransactionDate": "2020-01-31",
+    "transactionAmount": 10.01
+  },
+  {
+    "transactionGuid": "653fc2a9-14b9-4318-bcb3-178c59458f62",
+    "transactionDescription": "Menards",
+    "transactionCategory": "",
+    "transactionAccountType": "credit",
+    "transactionAccountNameOwner": "chase_kari",
+    "transactionNotes": "",
+    "transactionActiveStatus": false,
+    "transactionTransactionState": "cleared",
+    "transactionAccountId": 1001,
+    "transactionTransactionId": 1002,
+    "transactionReoccurring": false,
+    "transactionTransactionDate": "2020-03-31",
+    "transactionAmount": 21.01
+  },
+  {
+    "transactionGuid": "653fc2a9-14b9-4318-bcb3-178c59458f63",
+    "transactionDescription": "McDonalds",
+    "transactionCategory": "restaurant",
+    "transactionAccountType": "credit",
+    "transactionAccountNameOwner": "chase_brian",
+    "transactionNotes": "",
+    "transactionActiveStatus": false,
+    "transactionTransactionState": "cleared",
+    "transactionAccountId": 1002,
+    "transactionTransactionId": 1003,
+    "transactionReoccurring": false,
+    "transactionTransactionDate": "2020-03-31",
+    "transactionAmount": 24.34
+  },
+  {
+    "transactionGuid": "653fc2a9-14b9-4318-bcb3-178c59458f64",
+    "transactionDescription": "Chick Fil A",
+    "transactionCategory": "restaurant",
+    "transactionAccountType": "credit",
+    "transactionAccountNameOwner": "chase_brian",
+    "transactionNotes": "",
+    "transactionActiveStatus": false,
+    "transactionTransactionState": "cleared",
+    "transactionAccountId": 1002,
+    "transactionTransactionId": 1003,
+    "transactionReoccurring": false,
+    "transactionTransactionDate": "2020-03-31",
+    "transactionAmount": 18.33
+  }
+]

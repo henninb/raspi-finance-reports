@@ -5,20 +5,15 @@ import Finance
 import Data.Time
 import Data.Int
 import Data.Time.Calendar
-
-
+import qualified Data.ByteString.Lazy as LB
 import Database.PostgreSQL.Simple
+import Data.Aeson (decode, eitherDecode)
+import Data.Data (typeOf)
 -- import           Database.Persist.Postgresql
-
 
 parseDay :: String -> Day
 parseDay = parseTimeOrError True defaultTimeLocale "%Y-%m-%d"
 
--- accountAccountNameOwner :: String,¬
---    30     accountAccountId  :: Integer,¬
---    29     accountAccountType  :: String,¬
---    28     accountActiveStatus  :: Bool,¬
---    27     accountMoniker  :: String¬
 insertAccount :: Connection -> Account -> IO Int64
 -- insertAccount connection = execute connection "INSERT INTO t_account(account_name_owner, account_id, account_type, active_status,  moniker) VALUES('chase_kari', 1001, 'credit', '0000')"
 insertAccount connection = execute connection "INSERT INTO t_account(account_name_owner, account_id, account_type, active_status,  moniker) VALUES(?, ?, ?, ?, ?)"
@@ -58,11 +53,24 @@ spec =
 
 main :: IO ()
 main = do
-  -- conn <- connectPostgreSQL ("host='localhost' user='henninb' dbname='test' password='monday1'")
   conn <- connectPostgreSQL connStr
   _ <- execute_ conn "TRUNCATE TABLE t_transaction RESTART IDENTITY CASCADE"
   _ <- execute_ conn "TRUNCATE TABLE t_account RESTART IDENTITY CASCADE"
-  insertAccount conn account
-  insertTransaction conn transaction
-  insertTransaction conn transaction1
+
+  payloadTransactions <- LB.readFile "test-transactions.json"
+  let eitherTransactions = eitherDecode payloadTransactions :: Either String [Transaction]
+  let Right transactions = eitherTransactions
+
+  payloadAccounts <- LB.readFile "test-accounts.json"
+  let eitherAccounts = eitherDecode payloadAccounts :: Either String [Account]
+  print (typeOf eitherAccounts)
+  let Right accounts = eitherAccounts
+  let _ = map (insertAccount conn) accounts
+  let _ = map (insertTransaction conn) transactions
+
+  print transactions
+  --insertAccount conn account
+  --print (typeOf insertAccounts)
+  --insertTransaction conn transaction
+  --insertTransaction conn transaction1
   hspec spec

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 7a7eba6c9e564214ea72e1f674f723c6b9bc973c3d1da0351fa3b01b64118060
+-- hash: 683f39b30bce2d23d2dfb8aaa767fc4701c423b931aca440dfab4c3d5f6e532f
 
 name:           raspi-finance-reports
 version:        0.1.0.0
@@ -42,7 +42,6 @@ library
     , directory
     , http-client
     , http-conduit
-    , lens
     , lens-aeson
     , mtl
     , numbers
@@ -81,7 +80,9 @@ test-suite raspi-finance-reports-test
       test
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      base >=4.7 && <5
+      aeson
+    , base >=4.7 && <5
+    , bytestring
     , hspec
     , postgresql-simple
     , raspi-finance-reports

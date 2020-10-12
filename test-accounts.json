@@ -14,7 +14,7 @@
     "accountAccountId": 1002
   },
   {
-    "accountAccountType": "credit",
+    "accountAccountType": "debit",
     "accountAccountNameOwner": "test_brian",
     "accountActiveStatus": false,
     "accountMoniker": "0000",

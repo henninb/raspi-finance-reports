@@ -133,8 +133,8 @@ someUUIDs =
       (u4, g4) = random g3
   in [u1,u2,u3,u4]
 
-transaction :: Transaction
-transaction = Transaction "653fc2a9-14b9-4318-bcb3-178c59458f61" "test" "test" "credit" "chase_kari" "" "cleared" 1013 1 True True (parseDay "2020-12-31") 0.0
+--transaction :: Transaction
+--transaction = Transaction "653fc2a9-14b9-4318-bcb3-178c59458f61" "test" "test" "credit" "chase_kari" "" "cleared" 1013 1 True True (parseDay "2020-12-31") 0.0
 
 printOutstandingTransactions :: Transaction -> IO ()
 printOutstandingTransactions transaction =

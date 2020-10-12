@@ -42,28 +42,28 @@ spec =
 main :: IO ()
 main = do
   connection <- connectPostgreSQL connStr
---  _ <- execute_ connection "TRUNCATE TABLE t_transaction RESTART IDENTITY CASCADE"
---  _ <- execute_ connection "TRUNCATE TABLE t_account RESTART IDENTITY CASCADE"
 
   payloadTransactions <- LB.readFile "test-transactions.json"
   let eitherTransactions = eitherDecode payloadTransactions :: Either String [Transaction]
-  
+
   payloadAccounts <- LB.readFile "test-accounts.json"
   let eitherAccounts = eitherDecode payloadAccounts :: Either String [Account]
-    
+
   putStrLn "--- separated ---"
   print (typeOf eitherAccounts)
   print (typeOf eitherTransactions)
   putStrLn "--- separated ---"
   let Right unwrappedTransactions = eitherTransactions
   let Right unwrappedAccounts = eitherAccounts
-  
+
   print (unwrappedAccounts!!2)
   print (typeOf (unwrappedAccounts!!2))
-  
-  let _ = insertAccount connection (unwrappedAccounts!!2)
-  let _ = insertAccount connection (unwrappedAccounts!!1)
-  let _ = insertAccount connection (unwrappedAccounts!!0)
+
+  _ <- execute_ connection "TRUNCATE TABLE t_transaction RESTART IDENTITY CASCADE"
+  _ <- execute_ connection "TRUNCATE TABLE t_account RESTART IDENTITY CASCADE"
+  _ <- insertAccount connection (unwrappedAccounts!!2)
+  _ <- insertAccount connection (unwrappedAccounts!!1)
+  _ <- insertAccount connection (unwrappedAccounts!!0)
 --  let _ = map (insertTransaction conn) transactions
   --let x = myInsert conn accounts
   putStrLn "--- separated ---"
@@ -74,7 +74,7 @@ main = do
   print (length eitherAccounts)
   print (length eitherTransactions)
   putStrLn "--- separated ---"
-  
+
   transactions <- selectAllTransactions connection
   accounts <- selectAllAccounts connection
   let credits = transactionCredits transactions
@@ -83,6 +83,7 @@ main = do
   hspec spec
   print eitherAccounts
   print (length eitherAccounts)
+  print (length accounts)
   putStrLn "--- separated ---"
-  let _ = map (print) unwrappedAccounts
+  let _ = map print unwrappedAccounts
   putStrLn "--- separated ---"

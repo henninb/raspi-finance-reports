@@ -71,4 +71,7 @@ main = do
   hspec spec
   print (length accounts)
   print (length transactions)
+  print (addTransactions credits)
+  print (addTransactions debits)
+
   putStrLn "--- separated ---"

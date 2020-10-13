@@ -88,6 +88,7 @@ data Category = Category
     {category :: String,
     categoryId  :: Integer
     } deriving (Show, Generic, Eq, ToJSON, FromJSON)
+
 instance FromRow Category
 instance ToRow Category
 
@@ -134,12 +135,9 @@ someUUIDs =
       (u4, g4) = random g3
   in [u1,u2,u3,u4]
 
---transaction :: Transaction
---transaction = Transaction "653fc2a9-14b9-4318-bcb3-178c59458f61" "test" "test" "credit" "chase_kari" "" "cleared" 1013 1 True True (parseDay "2020-12-31") 0.0
-
 printOutstandingTransactions :: Transaction -> IO ()
 printOutstandingTransactions transaction =
-  when (transactionTransactionState transaction == "cleared") $ print (transactionDescription transaction)
+  when (transactionTransactionState transaction == "outstanding") $ print (transactionDescription transaction)
 
 countTransactionsList:: [Transaction] -> Int
 countTransactionsList = foldr (\ x -> (+) 1) 0
@@ -147,20 +145,23 @@ countTransactionsList = foldr (\ x -> (+) 1) 0
 addTransactions:: [Transaction] -> Scientific
 addTransactions = foldr ((+) . transactionAmount) 0.0
 
-addActiveTransactions:: [Transaction] -> Scientific
+addActiveTransactions :: [Transaction] -> Scientific
 addActiveTransactions = addTransactions . filter isActive
 
-countOutstanding :: Num a => [Transaction] -> a
+countOutstanding :: [Transaction] -> Int
 countOutstanding []  = 0
-countOutstanding (x:xs) =  if transactionTransactionState x == "cleared" then 1 + countOutstanding xs else 0 + countOutstanding xs
+countOutstanding (x:xs) = if transactionTransactionState x == "outstanding" then 1 + countOutstanding xs else 0 + countOutstanding xs
 
 isOutstanding x = transactionTransactionState x == "outstanding"
 isCleared x = transactionTransactionState x == "cleared"
 isFuture x = transactionTransactionState x == "future"
 isCredit x = transactionAccountType x == "credit"
 isDebit x = transactionAccountType x == "debit"
+
+isActive :: Transaction -> Bool
 isActive = transactionActiveStatus
--- isReoccurring :: Transaction -> Bool
+
+isReoccurring :: Transaction -> Bool
 isReoccurring = transactionReoccurring
 
 transactionCredits :: [Transaction] -> [Transaction]
@@ -176,7 +177,7 @@ extractCategories :: [Transaction] -> [String]
 extractCategories xs = transactionCategory <$> xs
 
 sortAndGroupByList :: Ord a => [a] -> [(a, Int)]
-sortAndGroupByList myList = map (head &&& length) $ group $ sort myList
+sortAndGroupByList transactions = map (head &&& length) $ group $ sort transactions
 
 insertTransaction :: Connection -> Transaction -> IO Int64
 insertTransaction connection = execute connection "INSERT INTO t_transaction (guid,description,category,account_type,account_name_owner,notes,transaction_state,account_id,transaction_id,reoccurring,active_status,transaction_date,amount) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)"

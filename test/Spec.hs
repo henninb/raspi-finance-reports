@@ -56,37 +56,59 @@ spec = do
         connection <- connectPostgreSQL connStr
         transactions <- selectAllTransactions connection
         _ <- close connection
-        length transactions `shouldBe` 6
+        length transactions `shouldBe` 8
+
       it "count the number of accounts" $ do
         connection <- connectPostgreSQL connStr
         accounts <- selectAllAccounts connection
         _ <- close connection
         length accounts `shouldBe` 5
+
       it "amount of credits" $ do
         connection <- connectPostgreSQL connStr
         transactions <- selectAllTransactions connection
         let credits = transactionCredits transactions
         _ <- close connection
-        addTransactions credits `shouldBe` 73.69
+        addActiveTransactions credits `shouldBe` 115.02
+
       it "amount of credits" $ do
         connection <- connectPostgreSQL connStr
         transactions <- selectAllTransactions connection
         let debits = transactionDebits transactions
         _ <- close connection
-        addTransactions debits `shouldBe` 901.05
+        addActiveTransactions debits `shouldBe` 900.05
+
+      it "amount of totals" $ do
+        connection <- connectPostgreSQL connStr
+        transactions <- selectAllTransactions connection
+        let debits = transactionDebits transactions
+        let credits = transactionCredits transactions
+        _ <- close connection
+        addActiveTransactions debits - addActiveTransactions credits `shouldBe` 785.03
+
       it "amount of credits - cleared" $ do
         connection <- connectPostgreSQL connStr
         transactions <- selectAllTransactions connection
         let debits = transactionDebits transactions
         let debitsCleared = filter isCleared debits
         _ <- close connection
-        addTransactions debitsCleared `shouldBe` 900.05
+        addActiveTransactions debitsCleared `shouldBe` 900.05
+
       it "count of reoccurring transactions" $ do
         connection <- connectPostgreSQL connStr
         transactions <- selectAllTransactions connection
         let reoccurring = transactionsReoccurring transactions
         _ <- close connection
         length reoccurring `shouldBe` 2
+
+      it "count of outstanding transactions" $ do
+        connection <- connectPostgreSQL connStr
+        transactions <- selectAllTransactions connection
+        let outstanding = countOutstanding transactions
+        _ <- close connection
+        outstanding `shouldBe` 1
+
+
 
 main :: IO ()
 main = do

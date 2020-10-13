@@ -10,7 +10,7 @@
     "transactionTransactionState": "cleared",
     "transactionAccountId": 1001,
     "transactionTransactionId": 1001,
-    "transactionReoccurring": false,
+    "transactionReoccurring": true,
     "transactionTransactionDate": "2020-01-31",
     "transactionAmount": 10.01
   },
@@ -73,5 +73,20 @@
     "transactionReoccurring": false,
     "transactionTransactionDate": "2020-03-31",
     "transactionAmount": 900.05
+  },
+  {
+    "transactionGuid": "653fc2a9-14b9-4318-bcb3-178c59458f66",
+    "transactionDescription": "direct deposit",
+    "transactionCategory": "",
+    "transactionAccountType": "debit",
+    "transactionAccountNameOwner": "test_brian",
+    "transactionNotes": "",
+    "transactionActiveStatus": false,
+    "transactionTransactionState": "future",
+    "transactionAccountId": 1003,
+    "transactionTransactionId": 1006,
+    "transactionReoccurring": true,
+    "transactionTransactionDate": "2020-03-29",
+    "transactionAmount": 1
   }
 ]

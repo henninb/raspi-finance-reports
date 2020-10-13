@@ -2,30 +2,38 @@
   {
   "accountAccountType": "credit",
   "accountAccountNameOwner": "chase_kari",
-  "accountActiveStatus": false,
+  "accountActiveStatus": true,
   "accountMoniker": "0000",
   "accountAccountId": 1001
   },
   {
     "accountAccountType": "credit",
     "accountAccountNameOwner": "chase_brian",
-    "accountActiveStatus": false,
+    "accountActiveStatus": true,
     "accountMoniker": "0000",
     "accountAccountId": 1002
   },
   {
     "accountAccountType": "debit",
     "accountAccountNameOwner": "test_brian",
-    "accountActiveStatus": false,
+    "accountActiveStatus": true,
     "accountMoniker": "0000",
     "accountAccountId": 1003
   },
   {
     "accountAccountType": "credit",
     "accountAccountNameOwner": "citi_brian",
-    "accountActiveStatus": false,
+    "accountActiveStatus": true,
     "accountMoniker": "0000",
     "accountAccountId": 1004
+  },
+  {
+    "accountAccountType": "credit",
+    "accountAccountNameOwner": "notactive_brian",
+    "accountActiveStatus": false,
+    "accountMoniker": "0000",
+    "accountAccountId": 1005
   }
+
 ]
 

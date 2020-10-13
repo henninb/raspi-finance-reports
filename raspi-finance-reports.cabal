@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 683f39b30bce2d23d2dfb8aaa767fc4701c423b931aca440dfab4c3d5f6e532f
+-- hash: d48186149e04f2efd6fb3c55441bfa3f7de4ffd052385b608c149d321acf2b65
 
 name:           raspi-finance-reports
 version:        0.1.0.0
@@ -86,5 +86,6 @@ test-suite raspi-finance-reports-test
     , hspec
     , postgresql-simple
     , raspi-finance-reports
+    , scientific
     , time
   default-language: Haskell2010

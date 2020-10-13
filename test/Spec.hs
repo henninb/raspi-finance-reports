@@ -10,6 +10,7 @@ import Database.PostgreSQL.Simple
 import Data.Aeson (decode, eitherDecode)
 import Data.Data (typeOf)
 import Data.ByteString.Internal
+import Data.Scientific
 
 parseDay :: String -> Day
 parseDay = parseTimeOrError True defaultTimeLocale "%Y-%m-%d"
@@ -28,18 +29,9 @@ account = Account "chase_kari" 1001 "credit"  True "0000"
 
 connStr :: ByteString
 connStr = "host=localhost dbname=finance_test_db user=henninb password=monday1 port=5432"
---
-spec :: Spec
-spec = do
-    -- connection <- connectPostgreSQL connStr
-    -- transactions <- selectAllTransactions connection
-    -- accounts <- selectAllAccounts connection
-    describe "Describe group of tests" $ do
-      it "count the number of transactions" $
-        (4) `shouldBe` 4
 
-main :: IO ()
-main = do
+loadTestData :: IO ()
+loadTestData = do
   connection <- connectPostgreSQL connStr
   _ <- execute_ connection "TRUNCATE TABLE t_transaction RESTART IDENTITY CASCADE"
   _ <- execute_ connection "TRUNCATE TABLE t_account RESTART IDENTITY CASCADE"
@@ -52,18 +44,52 @@ main = do
   let Right unwrappedTransactions = eitherTransactions
   let Right unwrappedAccounts = eitherAccounts
 
-  _ <- mapM (insertAccount connection) unwrappedAccounts
-  _ <- mapM (insertTransaction connection) unwrappedTransactions
---
-  transactions <- selectAllTransactions connection
-  accounts <- selectAllAccounts connection
-  let credits = transactionCredits transactions
-  let debits = transactionDebits transactions
-  let reoccurring = transactionsReoccurring transactions
-  hspec spec
-  print (length accounts)
-  print (length transactions)
-  print (addTransactions credits)
-  print (addTransactions debits)
+  mapM_ (insertAccount connection) unwrappedAccounts
+  mapM_ (insertTransaction connection) unwrappedTransactions
+  _ <- close connection
+  putStrLn "--- separated ---"
 
+spec :: Spec
+spec = do
+    describe "test loaded data" $ do
+      it "count the number of transactions" $ do
+        connection <- connectPostgreSQL connStr
+        transactions <- selectAllTransactions connection
+        _ <- close connection
+        length transactions `shouldBe` 6
+      it "count the number of accounts" $ do
+        connection <- connectPostgreSQL connStr
+        accounts <- selectAllAccounts connection
+        _ <- close connection
+        length accounts `shouldBe` 5
+      it "amount of credits" $ do
+        connection <- connectPostgreSQL connStr
+        transactions <- selectAllTransactions connection
+        let credits = transactionCredits transactions
+        _ <- close connection
+        addTransactions credits `shouldBe` 73.69
+      it "amount of credits" $ do
+        connection <- connectPostgreSQL connStr
+        transactions <- selectAllTransactions connection
+        let debits = transactionDebits transactions
+        _ <- close connection
+        addTransactions debits `shouldBe` 901.05
+      it "amount of credits - cleared" $ do
+        connection <- connectPostgreSQL connStr
+        transactions <- selectAllTransactions connection
+        let debits = transactionDebits transactions
+        let debitsCleared = filter isCleared debits
+        _ <- close connection
+        addTransactions debitsCleared `shouldBe` 900.05
+      it "count of reoccurring transactions" $ do
+        connection <- connectPostgreSQL connStr
+        transactions <- selectAllTransactions connection
+        let reoccurring = transactionsReoccurring transactions
+        _ <- close connection
+        length reoccurring `shouldBe` 2
+
+main :: IO ()
+main = do
+  loadTestData
+  hspec spec
   putStrLn "--- separated ---"

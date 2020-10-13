@@ -76,3 +76,4 @@ tests:
     - postgresql-simple
     - bytestring
     - aeson
+    - scientific

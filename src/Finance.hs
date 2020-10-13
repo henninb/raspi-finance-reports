@@ -4,7 +4,8 @@
 
 module Finance (lookupEnv, addTransactions, extractCategories,
                 countOutstanding, sortAndGroupByList, transactionsReoccurring, transactionDebits,
-                selectAllTransactions, selectAllAccounts, transactionCredits, someUUIDs,
+                selectAllTransactions, selectAllAccounts, transactionCredits, someUUIDs, isCleared,
+                addActiveTransactions,
                 Account, Transaction, Transaction(..), Account(..)) where
 
 import Data.Aeson
@@ -146,15 +147,19 @@ countTransactionsList = foldr (\ x -> (+) 1) 0
 addTransactions:: [Transaction] -> Scientific
 addTransactions = foldr ((+) . transactionAmount) 0.0
 
+addActiveTransactions:: [Transaction] -> Scientific
+addActiveTransactions = addTransactions . filter isActive
+
 countOutstanding :: Num a => [Transaction] -> a
 countOutstanding []  = 0
 countOutstanding (x:xs) =  if transactionTransactionState x == "cleared" then 1 + countOutstanding xs else 0 + countOutstanding xs
 
 isOutstanding x = transactionTransactionState x == "outstanding"
 isCleared x = transactionTransactionState x == "cleared"
-isFuture x = transactionTransactionState x == "cleared"
+isFuture x = transactionTransactionState x == "future"
 isCredit x = transactionAccountType x == "credit"
 isDebit x = transactionAccountType x == "debit"
+isActive = transactionActiveStatus
 -- isReoccurring :: Transaction -> Bool
 isReoccurring = transactionReoccurring
 

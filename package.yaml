@@ -49,6 +49,7 @@ library:
     - uuid
     - random
     - MonadRandom
+#    - snap
 
 executables:
   raspi-finance-reports-exe:

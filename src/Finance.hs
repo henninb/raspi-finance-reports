@@ -72,6 +72,13 @@ import System.Random
 import Control.Monad.Random.Strict
 import qualified Data.UUID.V4 as U4
 
+--import Snap.Snaplet
+--
+--data Api = Api
+--
+--apiInit :: SnapletInit b Api
+--apiInit = makeSnaplet "api" "Core Api" Nothing $ return Api
+
 type AnotherType = String
 data MyType = MyType {
    uuid :: UUID,

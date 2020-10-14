@@ -2,10 +2,10 @@
 {-# LANGUAGE DeriveGeneric  #-}
 {-# LANGUAGE DeriveAnyClass #-}
 
-module Finance (lookupEnv, addTransactions, extractCategories,
+module Finance (lookupEnv, sumOfTransactions, extractCategories,
                 countOutstanding, sortAndGroupByList, transactionsReoccurring, transactionDebits,
                 selectAllTransactions, selectAllAccounts, transactionCredits, someUUIDs, isCleared,
-                addActiveTransactions,
+                sumOfActiveTransactions,
                 Account, Transaction, Transaction(..), Account(..)) where
 
 import Data.Aeson
@@ -142,11 +142,11 @@ printOutstandingTransactions transaction =
 countTransactionsList:: [Transaction] -> Int
 countTransactionsList = foldr (\ x -> (+) 1) 0
 
-addTransactions:: [Transaction] -> Scientific
-addTransactions = foldr ((+) . transactionAmount) 0.0
+sumOfTransactions:: [Transaction] -> Scientific
+sumOfTransactions = foldr ((+) . transactionAmount) 0.0
 
-addActiveTransactions :: [Transaction] -> Scientific
-addActiveTransactions = addTransactions . filter isActive
+sumOfActiveTransactions :: [Transaction] -> Scientific
+sumOfActiveTransactions = sumOfTransactions . filter isActive
 
 countOutstanding :: [Transaction] -> Int
 countOutstanding []  = 0
@@ -183,7 +183,7 @@ insertTransaction :: Connection -> Transaction -> IO Int64
 insertTransaction connection = execute connection "INSERT INTO t_transaction (guid,description,category,account_type,account_name_owner,notes,transaction_state,account_id,transaction_id,reoccurring,active_status,transaction_date,amount) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)"
 
 selectAllTransactions :: Connection -> IO [Transaction]
-selectAllTransactions connection = query_ connection "SELECT guid,description,category,account_type,account_name_owner,notes,transaction_state,account_id,transaction_id,reoccurring,active_status,transaction_date,amount FROM t_transaction" :: IO [Transaction]
+selectAllTransactions connection = query_ connection "SELECT guid,description,category,account_type,account_name_owner,notes,transaction_state,account_id,transaction_id,reoccurring,active_status,transaction_date,amount FROM t_transaction WHERE active_status='true'" :: IO [Transaction]
 
 selectAllAccounts :: Connection -> IO [Account]
-selectAllAccounts connection = query_ connection "SELECT account_name_owner,account_id,account_type,active_status,moniker FROM t_account" :: IO [Account]
+selectAllAccounts connection = query_ connection "SELECT account_name_owner,account_id,account_type,active_status,moniker FROM t_account WHERE active_status='true'" :: IO [Account]

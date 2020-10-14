@@ -104,9 +104,16 @@ spec = do
       it "count of outstanding transactions" $ do
         connection <- connectPostgreSQL connStr
         transactions <- selectAllTransactions connection
-        let outstanding = countOutstanding transactions
+        let outstanding = outstandingTransactions transactions
         _ <- close connection
-        outstanding `shouldBe` 1
+        length outstanding `shouldBe` 1
+
+      it "count of future transactions" $ do
+        connection <- connectPostgreSQL connStr
+        transactions <- selectAllTransactions connection
+        let future = futureTransactions transactions
+        _ <- close connection
+        length future `shouldBe` 0
 
 main :: IO ()
 main = do

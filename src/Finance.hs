@@ -3,10 +3,10 @@
 {-# LANGUAGE DeriveAnyClass #-}
 
 module Finance (lookupEnv, sumOfTransactions, extractCategories,
-                countOutstanding, sortAndGroupByList, transactionsReoccurring, transactionDebits,
+                outstandingTransactions, futureTransactions, sortAndGroupByList, transactionsReoccurring, transactionDebits,
                 selectAllTransactions, selectAllAccounts, transactionCredits, someUUIDs, isCleared,
                 sumOfActiveTransactions,
-                Account, Transaction, Transaction(..), Account(..)) where
+                Transaction(..), Account(..)) where
 
 import Data.Aeson
 import Data.Aeson.Casing
@@ -144,10 +144,10 @@ someUUIDs =
 
 printOutstandingTransactions :: Transaction -> IO ()
 printOutstandingTransactions transaction =
-  when (transactionTransactionState transaction == "outstanding") $ print (transactionDescription transaction)
+  when (isOutstanding transaction) $ print (transactionDescription transaction)
 
-countTransactionsList:: [Transaction] -> Int
-countTransactionsList = foldr (\ x -> (+) 1) 0
+-- countTransactionsList:: [Transaction] -> Int
+-- countTransactionsList = foldr (\ x -> (+) 1) 0
 
 sumOfTransactions:: [Transaction] -> Scientific
 sumOfTransactions = foldr ((+) . transactionAmount) 0.0
@@ -155,9 +155,11 @@ sumOfTransactions = foldr ((+) . transactionAmount) 0.0
 sumOfActiveTransactions :: [Transaction] -> Scientific
 sumOfActiveTransactions = sumOfTransactions . filter isActive
 
-countOutstanding :: [Transaction] -> Int
-countOutstanding []  = 0
-countOutstanding (x:xs) = if transactionTransactionState x == "outstanding" then 1 + countOutstanding xs else 0 + countOutstanding xs
+futureTransactions :: [Transaction] -> [Transaction]
+futureTransactions = filter isFuture
+
+outstandingTransactions :: [Transaction] -> [Transaction]
+outstandingTransactions = filter isOutstanding
 
 isOutstanding x = transactionTransactionState x == "outstanding"
 isCleared x = transactionTransactionState x == "cleared"

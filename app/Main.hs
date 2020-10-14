@@ -34,7 +34,8 @@ main = do
 
   printf "Transaction Quantity: %d\n" (length transactions)
   printf "Account Quantity: %d\n" (length accounts)
-  printf "Transactions Outstanding: %d\n" (countOutstanding transactions)
+  printf "Transactions Outstanding: %d\n" (length (outstandingTransactions transactions))
+  printf "Transactions Future: %d\n" (length (futureTransactions transactions))
   printf "Credits Quantity: %d\n"  (length credits)
   printf "Debits Quantity: %d\n" (length debits)
   print (sumOfActiveTransactions credits)

@@ -32,7 +32,7 @@ import Control.Monad
 
 import qualified Data.Vector as V
 -- TODO: not being used
-import qualified Network.HTTP.Client as N
+-- import qualified Network.HTTP.Client as N
 
 import Network.Wreq
 --import Control.Lens (^.)

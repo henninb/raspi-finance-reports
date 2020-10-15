@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: a42317e90f960ee69e68b556c222fe89f4b2be6a8ec1a40530ae2a8e6fac65d7
+-- hash: 110c148240e4085604a40aa1bcf094a3e7cb6951f168e6cde516dfc922ed8e06
 
 name:           raspi-finance-reports
 version:        0.1.0.0
@@ -25,6 +25,7 @@ source-repository head
 
 library
   exposed-modules:
+      Example
       Finance
       HelloApi
       ServerApi
@@ -35,6 +36,7 @@ library
   build-depends:
       MissingH
     , MonadRandom
+    , acid-state
     , aeson
     , aeson-casing
     , aeson-pretty
@@ -43,7 +45,6 @@ library
     , containers
     , data-has
     , directory
-    , http-client
     , http-conduit
     , http-types
     , lens
@@ -54,6 +55,7 @@ library
     , postgresql-simple
     , pretty-simple
     , random
+    , safecopy
     , scientific
     , scotty
     , servant
@@ -61,6 +63,7 @@ library
     , text
     , time
     , transformers
+    , transformers-either
     , uuid
     , vector
     , wai

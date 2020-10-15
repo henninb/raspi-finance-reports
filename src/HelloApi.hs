@@ -21,7 +21,7 @@ data User = User
 instance FromJSON User
 instance ToJSON User
 
-type HelloAPI  = Get '[PlainText] Text
+type HelloAPI = Get '[PlainText] Text
             :<|> "user" :> Capture "name" Text :> Capture "age" Int :> Get '[JSON] User
 --            :<|> Capture "name" Text :> Capture "age" Int :> Get '[JSON] User
 

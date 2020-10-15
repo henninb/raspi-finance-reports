@@ -37,7 +37,7 @@ library:
     - transformers
     - mtl
     - vector
-    - http-client
+#    - http-client
     - lens-aeson
     - wreq
     - aeson-pretty
@@ -46,8 +46,7 @@ library:
     - uuid
     - random
     - MonadRandom
-#    - heist
-#    - map-syntax
+    - acid-state
     - servant
     - servant-server
     - scotty
@@ -55,6 +54,8 @@ library:
     - warp
     - http-types
     - data-has
+    - safecopy
+    - transformers-either
 
 executables:
   raspi-finance-reports-exe:

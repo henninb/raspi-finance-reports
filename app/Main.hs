@@ -45,6 +45,6 @@ main = do
   printf "Reoccurring Quantity: %d\n" (length reoccurring)
   printf "Category Quantity: %d\n" (length categoriesCount)
 
-  putStrLn "--- need to search by fuel and restaurant ---"
+  putStrLn "--- TODO: search by fuel and restaurant ---"
   putStrLn "--- separated ---"
   restServer

@@ -1,11 +1,8 @@
 resolver: lts-16.16
 #resolver: lts-12.0
 
-
 packages:
 - .
 
 extra-deps:
-  - heist-1.1.0.1
-  - map-syntax-0.3
-  - xmlhtml-0.2.5.2
+#  - map-syntax-0.3

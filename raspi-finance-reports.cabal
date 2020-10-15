@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 62d287f52e82443b480f12a1564146b5497c4682e47a9539dee3c9ab24845f32
+-- hash: a42317e90f960ee69e68b556c222fe89f4b2be6a8ec1a40530ae2a8e6fac65d7
 
 name:           raspi-finance-reports
 version:        0.1.0.0
@@ -43,13 +43,11 @@ library
     , containers
     , data-has
     , directory
-    , heist
     , http-client
     , http-conduit
     , http-types
     , lens
     , lens-aeson
-    , map-syntax
     , mtl
     , numbers
     , optparse-applicative

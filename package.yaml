@@ -46,14 +46,9 @@ library:
     - uuid
     - random
     - MonadRandom
-#    - snap
-#    - snap-server
-#    - snap-core
-#    - snap-cors
-    - heist
-    - map-syntax
+#    - heist
+#    - map-syntax
     - servant
-#    - servant-snap
     - servant-server
     - scotty
     - wai

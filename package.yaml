@@ -13,15 +13,10 @@ extra-source-files:
 # synopsis:            Short description of your package
 # category:            Web
 
-# To avoid duplicated efforts in documentation and dealing with the
-# complications of embedding Haddock markup inside cabal files, it is
-# common to point users to the README.md file.
-description:         Please see the README on GitHub at <https://github.com/githubuser/raspi-finance-reports#readme>
+description: Please see the README on GitHub at <https://github.com/githubuser/raspi-finance-reports#readme>
 
 dependencies:
 - base >= 4.7 && < 5
-#- Spock
-
 
 library:
   source-dirs: src
@@ -32,7 +27,7 @@ library:
     - bytestring
     - aeson
     - aeson-casing
-    #- lens
+    - lens
     - MissingH
     - numbers
     - scientific
@@ -51,12 +46,25 @@ library:
     - uuid
     - random
     - MonadRandom
-    - snap
+#    - snap
+#    - snap-server
+#    - snap-core
+#    - snap-cors
+    - heist
+    - map-syntax
+    - servant
+#    - servant-snap
+    - servant-server
+    - scotty
+    - wai
+    - warp
+    - http-types
+    - data-has
 
 executables:
   raspi-finance-reports-exe:
-    main:                Main.hs
-    source-dirs:         app
+    main: Main.hs
+    source-dirs: app
     ghc-options:
     - -threaded
     - -rtsopts
@@ -66,8 +74,8 @@ executables:
     - postgresql-simple
 tests:
   raspi-finance-reports-test:
-    main:                Spec.hs
-    source-dirs:         test
+    main: Spec.hs
+    source-dirs: test
     ghc-options:
     - -threaded
     - -rtsopts

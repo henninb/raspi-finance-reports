@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 43a03aef0bb54697b169074ff9ab6110aeb28f88d59d28f566a388e88138355e
+-- hash: 62d287f52e82443b480f12a1564146b5497c4682e47a9539dee3c9ab24845f32
 
 name:           raspi-finance-reports
 version:        0.1.0.0
@@ -26,7 +26,8 @@ source-repository head
 library
   exposed-modules:
       Finance
-      WebTools
+      HelloApi
+      ServerApi
   other-modules:
       Paths_raspi_finance_reports
   hs-source-dirs:
@@ -40,10 +41,15 @@ library
     , base >=4.7 && <5
     , bytestring
     , containers
+    , data-has
     , directory
+    , heist
     , http-client
     , http-conduit
+    , http-types
+    , lens
     , lens-aeson
+    , map-syntax
     , mtl
     , numbers
     , optparse-applicative
@@ -51,14 +57,17 @@ library
     , pretty-simple
     , random
     , scientific
-    , snap
+    , scotty
+    , servant
+    , servant-server
     , text
     , time
     , transformers
     , uuid
     , vector
+    , wai
+    , warp
     , wreq
-    , snap
   default-language: Haskell2010
 
 executable raspi-finance-reports-exe

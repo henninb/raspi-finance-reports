@@ -72,28 +72,6 @@ import System.Random
 import Control.Monad.Random.Strict
 import qualified Data.UUID.V4 as U4
 
-import Snap.Snaplet
-
-data Api = Api
-
-apiInit :: SnapletInit b Api
-apiInit = makeSnaplet "api" "Core Api" Nothing $ return Api
-
-
----- | The application's routes.
---routes :: ElmOptions -> [(ByteString, H ())]
---routes opts =
---  [ ("/"           , redirect "/static")
---  , ("/login"      , with auth handleLoginSubmit)
---  , ("/logout"     , with auth handleLogout)
---  , ("/new_user"   , with auth handleNewUser)
---  , ("/api/patron" , handlePatrons)
---  , ("/static"     , serveDirectory "static")
---  , serveElmDirectory opts "/elm"
---  , serveElmRuntime opts
---  ]
-
-
 type AnotherType = String
 data MyType = MyType {
    uuid :: UUID,

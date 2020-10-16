@@ -4,13 +4,12 @@ import Test.Hspec
 import Finance
 import Data.Time
 import Data.Int
-import Data.Time.Calendar
 import qualified Data.ByteString.Lazy as LB
 import Database.PostgreSQL.Simple
-import Data.Aeson (decode, eitherDecode)
-import Data.Data (typeOf)
+import Data.Aeson
+-- import Data.Data (typeOf)
 import Data.ByteString.Internal
-import Data.Scientific
+
 
 parseDay :: String -> Day
 parseDay = parseTimeOrError True defaultTimeLocale "%Y-%m-%d"

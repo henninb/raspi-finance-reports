@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 110c148240e4085604a40aa1bcf094a3e7cb6951f168e6cde516dfc922ed8e06
+-- hash: d4eb67a283148fcdf42bc08701bf635427dae3239fd60bde0f1652a0e6a79c9b
 
 name:           raspi-finance-reports
 version:        0.1.0.0
@@ -28,6 +28,7 @@ library
       Example
       Finance
       HelloApi
+      RestTool
       ServerApi
   other-modules:
       Paths_raspi_finance_reports

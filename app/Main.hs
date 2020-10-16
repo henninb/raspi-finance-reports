@@ -2,7 +2,6 @@
 module Main where
 
 import Finance
-import ServerApi
 import Database.PostgreSQL.Simple
 import System.Exit
 import System.Environment
@@ -47,4 +46,4 @@ main = do
 
   putStrLn "--- TODO: search by fuel and restaurant ---"
   putStrLn "--- separated ---"
-  restServer
+  apiService

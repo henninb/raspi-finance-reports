@@ -19,16 +19,14 @@
 
 module Example where
 
-import Control.Applicative ((<$>))
+
 import Control.Lens (makeLenses, (^.), (%~), (.~))
-import Control.Monad.Reader (ask)
-import Control.Monad.State (modify, get)
-import Control.Monad.Trans.Either
+import Control.Monad.Reader
+import Control.Monad.State
 import Data.Acid
 import Data.Acid.Advanced
 import Data.Aeson (FromJSON, ToJSON)
 import Data.List ((\\), nub)
-import Data.Proxy (Proxy(Proxy))
 import Data.SafeCopy (deriveSafeCopy, base)
 import Data.Typeable
 import GHC.Generics
@@ -36,9 +34,8 @@ import Network.Wai
 import Network.Wai.Handler.Warp (runSettings, setHost, setPort, defaultSettings)
 import Servant.API
 import Servant.Server
-import Servant.Utils.StaticFiles (serveDirectory)
+import Servant.Utils.StaticFiles
 
-import qualified Data.Map as M
 
 
 -- * config
@@ -63,30 +60,27 @@ instance ToJSON DB
 makeLenses ''DB
 $(deriveSafeCopy 0 'base ''DB)
 
-
--- * persistence
-
 openDB :: IO St
 openDB = openLocalStateFrom dbPath (DB ["red", "green", "smelly"] "")
 
 getUser :: Query DB String
-getUser = (^. user) <$> ask
+getUser = asks (^. user)
 
 changeUser :: String -> Update DB ()
 changeUser u = modify $ user .~ u
 
 getColors :: Query DB [String]
-getColors = (^. colors) <$> ask
+getColors = asks (^. colors)
 
 addColor :: String -> Update DB [String]
 addColor c = do
   modify $ colors %~ (nub . (c:))
-  (^. colors) <$> get
+  gets (^. colors)
 
 dropColor :: String -> Update DB [String]
 dropColor c = do
   modify $ colors %~ (\\ [c])
-  (^. colors) <$> get
+  gets (^. colors)
 
 $(makeAcidic ''DB ['getUser, 'changeUser, 'getColors, 'addColor, 'dropColor])
 

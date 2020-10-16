@@ -1,4 +1,5 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TypeOperators #-}
 
 module ServerApi(restServer) where
 
@@ -6,9 +7,9 @@ import           HelloApi
 import           Network.Wai
 import           Network.Wai.Handler.Warp
 import           Servant
-import           Servant.API
+import Data.Text.Internal
 
---server :: Server HelloAPI
+server :: Handler Data.Text.Internal.Text :<|> (Data.Text.Internal.Text -> Int -> Handler User)
 server = hello :<|> user
     where
         hello = return "Hello world"

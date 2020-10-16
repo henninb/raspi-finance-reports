@@ -5,6 +5,5 @@ packages:
 - .
 
 extra-deps:
-#  - map-syntax-0.3
   - acid-state-0.16.0.1
   - transformers-either-0.1.1

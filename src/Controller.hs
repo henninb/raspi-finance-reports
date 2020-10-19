@@ -1,4 +1,3 @@
-{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE DataKinds #-}
 
@@ -17,10 +16,9 @@ type TransactionApi =
   Get '[JSON] String
   -- localhost:3000/transaction
   :<|> "transaction" :> Get '[JSON] [Transaction]
-  -- TODO: this code does not work
-   -- localhost:3000/test?id=1
---  :<|> "test" :> Capture "id" Integer :> Get '[JSON] Transaction
   :<|> "first" :> Get '[JSON] Transaction
+     -- http://localhost:3000/transaction/1006
+  :<|> "transaction" :> Capture "id" Int :> Get '[JSON] Int
 
 transactionApi :: Proxy TransactionApi
 transactionApi = Proxy
@@ -62,12 +60,14 @@ server transactions =
   getRoot
   :<|> getTransactions transactions
   :<|> getTransactionFirst transactions
+  :<|> getTransactionById transactions
 
 getTransactions :: [Transaction] -> Handler [Transaction]
 getTransactions = return
 
---getTransactionById :: [Transaction] -> Integer -> Handler Transaction
---getTransactionById transactions 1001 = return (head transactions)
+-- http://localhost:3000/test/1006
+getTransactionById :: [Transaction] -> Int -> Handler Int
+getTransactionById transactions = return
 --getTransactionById transactions 1002 = return (head transactions)
 --getTransactionById transactions 1003 = return (head transactions)
 --getTransactionById transactions 1004 = return (head transactions)

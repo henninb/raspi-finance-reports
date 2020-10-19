@@ -2,12 +2,11 @@
 {-# LANGUAGE DeriveGeneric  #-}
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DataKinds #-}
-{-# LANGUAGE LambdaCase #-}
-{-# LANGUAGE TypeOperators #-}
+
 
 module Finance (lookupEnv, sumOfTransactions, extractCategories,
                 outstandingTransactions, futureTransactions, sortAndGroupByList, transactionsReoccurring, transactionDebits,
-                selectAllTransactions, selectAllAccounts, transactionCredits, someUUIDs, isCleared, apiService,
+                selectAllTransactions, selectAllAccounts, transactionCredits, someUUIDs, isCleared,
                 sumOfActiveTransactions,
                 Transaction(..), Account(..)) where
 
@@ -23,10 +22,6 @@ import System.Environment
 import Data.UUID
 import System.Random
 --import qualified Data.UUID.V4 as U4
-import Network.Wai
-import Network.Wai.Handler.Warp
-import Servant
-import System.IO
 
 data Category = Category
     {category :: String,
@@ -133,46 +128,3 @@ selectAllTransactions connection = query_ connection "SELECT guid,description,ca
 
 selectAllAccounts :: Connection -> IO [Account]
 selectAllAccounts connection = query_ connection "SELECT account_name_owner,account_id,account_type,active_status,moniker FROM t_account WHERE active_status='true'" :: IO [Account]
-
-
--- TODO: move this code to the Main
--- http://localhost:3000/transaction/
-
-type TransactionApi =
-  "transaction" :> Get '[JSON] [Transaction] :<|>
-  --TODO: this code does not work
-  "transaction" :> Capture "transactionId" Integer :> Get '[JSON] Transaction
-
-transactionApi :: Proxy TransactionApi
-transactionApi = Proxy
-
-apiService :: IO ()
-apiService = do
-  let port = 3000
-      settings =
-        setPort port $
-        setBeforeMainLoop (hPutStrLn stderr ("listening on port " ++ show port))
-        defaultSettings
-  runSettings settings =<< mkApp
-
-mkApp :: IO Application
-mkApp = return $ serve transactionApi server
-
-server :: Server TransactionApi
-server =
-  getTransactions :<|>
-  getTransactionById
-
-getTransactions :: Handler [Transaction]
-getTransactions = return [exampleTransaction]
-
-getTransactionById :: Integer -> Handler Transaction
-getTransactionById = \ case
-  0 -> return exampleTransaction
-  _ -> throwError err404
-
-parseDay :: String -> Day
-parseDay = parseTimeOrError True defaultTimeLocale "%Y-%m-%d"
-
-exampleTransaction :: Transaction
-exampleTransaction = Transaction "653fc2a9-14b9-4318-bcb3-178c59458f61" "test" "test" "credit" "chase_kari" "" "cleared" 1001 1002 True True (parseDay "2020-12-31") 0.0

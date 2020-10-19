@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: d4eb67a283148fcdf42bc08701bf635427dae3239fd60bde0f1652a0e6a79c9b
+-- hash: f1f64b12d854351061efb6c9f57f54ae34c8e1615cc59637c37a07464a0c899f
 
 name:           raspi-finance-reports
 version:        0.1.0.0
@@ -25,11 +25,9 @@ source-repository head
 
 library
   exposed-modules:
+      Controller
       Example
       Finance
-      HelloApi
-      RestTool
-      ServerApi
   other-modules:
       Paths_raspi_finance_reports
   hs-source-dirs:
@@ -81,8 +79,15 @@ executable raspi-finance-reports-exe
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , data-has
+    , http-types
     , postgresql-simple
     , raspi-finance-reports
+    , servant
+    , servant-server
+    , transformers-either
+    , wai
+    , warp
   default-language: Haskell2010
 
 test-suite raspi-finance-reports-test

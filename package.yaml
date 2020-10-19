@@ -68,6 +68,13 @@ executables:
     dependencies:
     - raspi-finance-reports
     - postgresql-simple
+    - servant
+    - servant-server
+    - wai
+    - warp
+    - http-types
+    - data-has
+    - transformers-either
 tests:
   raspi-finance-reports-test:
     main: Spec.hs

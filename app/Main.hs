@@ -14,9 +14,9 @@ main = do
   programName <- getProgName
   args <- getArgs
   if "-h" `elem` args || "--help" `elem` args then
-    print "help" >> exitSuccess
+    print (programName ++ " help") >> exitSuccess
   else if "-v" `elem` args || "--version" `elem` args then
-    print "version" >> exitSuccess
+    print (programName ++ "version") >> exitSuccess
   else
     print "running main program..."
   putStrLn "--- separated ---"

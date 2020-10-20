@@ -15,6 +15,7 @@ import Text.Printf
 import GHC.Generics
 import Data.Aeson
 import Data.Scientific
+import Data.Maybe
 
 data Report = Report
     {debits :: Scientific,
@@ -86,14 +87,13 @@ getTransactions = return
 
 -- http://localhost:3000/transaction/1001
 getTransactionById :: [Transaction] -> Integer -> Handler Transaction
-getTransactionById transactions x = return (fromJust (findByTransactionId x transactions))
+getTransactionById transactions x = return (fromJustCustom (findByTransactionId x transactions))
 --getTransactionById _ _ = throwError err404
 
 getRoot :: Handler String
 getRoot = return "{}"
 
-getParm :: Maybe Int -> Handler String
-getParm i = return (show (fromJust i))
+
 
 getReport :: [Transaction] -> Handler Report
 getReport transactions = return report
@@ -110,9 +110,18 @@ getReport transactions = return report
                     (sumOfActiveTransactions credits) (sumOfActiveTransactions debits - sumOfActiveTransactions credits)
                     transactionCount 0 transactionOutstandingCount transactionFutureCount creditCount debitCount reoccurringCount 0
 
-fromJust :: Maybe a -> a
-fromJust Nothing = error "Maybe.fromJust: Nothing"
-fromJust (Just x) = x
+fromJustCustom :: Maybe a -> a
+fromJustCustom Nothing = error "Maybe.fromJust: Nothing"
+fromJustCustom (Just x) = x
+
+--getParm :: Maybe Int -> Handler String
+--getParm i = return (show (fromJustCustom i))
+
+getParm :: Maybe Int -> Handler String
+getParm parm = return result
+  where
+  parm1 = fromMaybe 0 parm
+  result = if parm1 == 0 then "failure" else show parm1
 
 --stringHandler = liftIO ioMaybeString >>= f
 --    where f (Just str) = return str

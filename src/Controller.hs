@@ -1,5 +1,8 @@
 {-# LANGUAGE TypeOperators #-}
 {-# LANGUAGE DataKinds #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE DeriveGeneric  #-}
+{-# LANGUAGE DeriveAnyClass #-}
 
 module Controller where
 import Finance
@@ -9,16 +12,25 @@ import Servant
 import System.IO
 import Database.PostgreSQL.Simple
 import Text.Printf
+import GHC.Generics
+import Data.Aeson
+import Data.Scientific
 
+data Report = Report
+    {debits :: Scientific,
+    credits :: Scientific,
+    totals  :: Scientific
+    } deriving (Show, Eq, Generic, ToJSON, FromJSON)
+    
+-- localhost:3000/
+-- localhost:3000/transaction
+-- http://localhost:3000/transaction/first
+-- http://localhost:3000/transaction/1001
 type TransactionApi =
-  -- localhost:3000/
   Get '[JSON] String
-  -- localhost:3000/transaction
   :<|> "transaction" :> Get '[JSON] [Transaction]
-  -- http://localhost:3000/transaction/first
-  :<|> "transaction" :> "first" :> Get '[JSON] Transaction
-  -- http://localhost:3000/transaction/1001
   :<|> "transaction" :> Capture "id" Integer :> Get '[JSON] Transaction
+  :<|> "report" :> Get '[JSON] Report
 
 transactionApi :: Proxy TransactionApi
 transactionApi = Proxy
@@ -46,9 +58,9 @@ mkApp = do
     printf "Transactions Future: %d\n" (length (futureTransactions transactions))
     printf "Credits Quantity: %d\n"  (length credits)
     printf "Debits Quantity: %d\n" (length debits)
-    print (sumOfActiveTransactions credits)
-    print (sumOfActiveTransactions debits)
-    print (sumOfActiveTransactions debits - sumOfActiveTransactions credits)
+--    print (sumOfActiveTransactions credits)
+--    print (sumOfActiveTransactions debits)
+--    print (sumOfActiveTransactions debits - sumOfActiveTransactions credits)
     printf "Reoccurring Quantity: %d\n" (length reoccurring)
     printf "Category Quantity: %d\n" (length categoriesCount)
     return $ serve transactionApi (server transactions accounts)
@@ -57,9 +69,9 @@ server :: [Transaction] -> [Account] -> Server TransactionApi
 server transactions accounts =
   getRoot
   :<|> getTransactions transactions
-  :<|> getTransactionFirst transactions
   :<|> getTransactionById transactions
-
+  :<|> getReport transactions
+  
 getTransactions :: [Transaction] -> Handler [Transaction]
 getTransactions = return
 
@@ -68,11 +80,15 @@ getTransactionById :: [Transaction] -> Integer -> Handler Transaction
 getTransactionById transactions x = return (fromJust (findByTransactionId x transactions))
 --getTransactionById _ _ = throwError err404
 
-getTransactionFirst :: [Transaction] -> Handler Transaction
-getTransactionFirst transactions = return (head transactions)
-
 getRoot :: Handler String
 getRoot = return "{}"
+
+getReport :: [Transaction] -> Handler Report
+getReport transactions = return report
+  where
+    credits = transactionCredits transactions
+    debits = transactionDebits transactions
+    report = Report (sumOfActiveTransactions debits) (sumOfActiveTransactions credits) (sumOfActiveTransactions debits - sumOfActiveTransactions credits)
 
 fromJust :: Maybe a -> a
 fromJust Nothing = error "Maybe.fromJust: Nothing"

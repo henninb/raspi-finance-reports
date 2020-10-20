@@ -114,6 +114,10 @@ spec = do
         _ <- close connection
         length future `shouldBe` 0
 
+      it "hasTransactionId of 1002" $ do
+        let result = hasTransactionId transaction 1002
+        result `shouldBe` True
+
 main :: IO ()
 main = do
   loadTestData

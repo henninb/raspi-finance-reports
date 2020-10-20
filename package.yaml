@@ -37,7 +37,6 @@ library:
     - transformers
     - mtl
     - vector
-#    - http-client
     - lens-aeson
     - wreq
     - aeson-pretty
@@ -49,7 +48,6 @@ library:
     - acid-state
     - servant
     - servant-server
-    - scotty
     - wai
     - warp
     - http-types
@@ -67,14 +65,6 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - raspi-finance-reports
-    - postgresql-simple
-    - servant
-    - servant-server
-    - wai
-    - warp
-    - http-types
-    - data-has
-    - transformers-either
 tests:
   raspi-finance-reports-test:
     main: Spec.hs

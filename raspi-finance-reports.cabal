@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f1f64b12d854351061efb6c9f57f54ae34c8e1615cc59637c37a07464a0c899f
+-- hash: 0b2b496c3bd8ca62f398de95abc48f1f9cd2275fcd2f2f98925e5519a2c222e6
 
 name:           raspi-finance-reports
 version:        0.1.0.0
@@ -56,7 +56,6 @@ library
     , random
     , safecopy
     , scientific
-    , scotty
     , servant
     , servant-server
     , text
@@ -79,15 +78,7 @@ executable raspi-finance-reports-exe
   ghc-options: -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
-    , data-has
-    , http-types
-    , postgresql-simple
     , raspi-finance-reports
-    , servant
-    , servant-server
-    , transformers-either
-    , wai
-    , warp
   default-language: Haskell2010
 
 test-suite raspi-finance-reports-test

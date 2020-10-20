@@ -7,7 +7,7 @@
 module Finance (lookupEnv, sumOfTransactions, extractCategories,
                 outstandingTransactions, futureTransactions, sortAndGroupByList, transactionsReoccurring, transactionDebits,
                 selectAllTransactions, selectAllAccounts, transactionCredits, someUUIDs, isCleared,
-                sumOfActiveTransactions,
+                sumOfActiveTransactions, hasTransactionId, findByTransactionId,
                 Transaction(..), Account(..)) where
 
 import Data.Aeson
@@ -90,6 +90,16 @@ outstandingTransactions = filter isOutstanding
 isOutstanding :: Transaction -> Bool
 isOutstanding x = transactionTransactionState x == "outstanding"
 
+hasTransactionId :: Integer -> Transaction -> Bool
+hasTransactionId id transaction = transactionTransactionId transaction == id
+
+findByTransactionId :: Integer -> [Transaction]  -> Maybe Transaction
+findByTransactionId id = find (\f -> transactionTransactionId f == id)
+
+fromJust :: Maybe a -> a
+fromJust Nothing = error "Maybe.fromJust: Nothing"
+fromJust (Just x) = x
+
 isCleared :: Transaction -> Bool
 isCleared x = transactionTransactionState x == "cleared"
 
@@ -128,3 +138,4 @@ selectAllTransactions connection = query_ connection "SELECT guid,description,ca
 
 selectAllAccounts :: Connection -> IO [Account]
 selectAllAccounts connection = query_ connection "SELECT account_name_owner,account_id,account_type,active_status,moniker FROM t_account WHERE active_status='true'" :: IO [Account]
+

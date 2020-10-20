@@ -9,7 +9,6 @@ import Servant
 import System.IO
 import Database.PostgreSQL.Simple
 import Text.Printf
-import Data.List
 
 type TransactionApi =
   -- localhost:3000/
@@ -49,6 +48,7 @@ mkApp = do
     printf "Debits Quantity: %d\n" (length debits)
     print (sumOfActiveTransactions credits)
     print (sumOfActiveTransactions debits)
+    print (sumOfActiveTransactions debits - sumOfActiveTransactions credits)
     printf "Reoccurring Quantity: %d\n" (length reoccurring)
     printf "Category Quantity: %d\n" (length categoriesCount)
     return $ serve transactionApi (server transactions accounts)

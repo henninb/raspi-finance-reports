@@ -34,12 +34,15 @@ data Report = Report
 -- http://localhost:3000/transaction
 -- http://localhost:3000/transaction/1001
 -- http://localhost:3000/report
+-- http://localhost:3000/optional?parm1=5
 type TransactionApi =
   Get '[JSON] String
   :<|> "transaction" :> Get '[JSON] [Transaction]
   :<|> "transaction" :> Capture "id" Integer :> Get '[JSON] Transaction
   :<|> "report" :> Get '[JSON] Report
-
+--  :<|> "optional" :> Get '[JSON] String
+  :<|> "optional" :> QueryParam "parm1" Int :> Get '[JSON] String  -- equivalent to 'GET /optional?parm1=test'
+                       
 transactionApi :: Proxy TransactionApi
 transactionApi = Proxy
 
@@ -76,6 +79,7 @@ server transactions accounts =
   :<|> getTransactions transactions
   :<|> getTransactionById transactions
   :<|> getReport transactions
+  :<|> getParm
 
 getTransactions :: [Transaction] -> Handler [Transaction]
 getTransactions = return
@@ -87,6 +91,9 @@ getTransactionById transactions x = return (fromJust (findByTransactionId x tran
 
 getRoot :: Handler String
 getRoot = return "{}"
+
+getParm :: Maybe Int -> Handler String
+getParm i = return (show (fromJust i))
 
 getReport :: [Transaction] -> Handler Report
 getReport transactions = return report

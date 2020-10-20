@@ -19,9 +19,17 @@ import Data.Scientific
 data Report = Report
     {debits :: Scientific,
     credits :: Scientific,
-    totals  :: Scientific
+    totals  :: Scientific,
+    transactionCount :: Int,
+    accountCount :: Int,
+    transactionOutstandingCount :: Int,
+    transactionFutureCount :: Int,
+    creditCount :: Int,
+    debitCount :: Int,
+    reoccurringCount :: Int,
+    categoryCount :: Int
     } deriving (Show, Eq, Generic, ToJSON, FromJSON)
-    
+
 -- localhost:3000/
 -- localhost:3000/transaction
 -- http://localhost:3000/transaction/first
@@ -52,17 +60,14 @@ mkApp = do
     let categoriesList = extractCategories transactions
     let categoriesCount = sortAndGroupByList categoriesList
 
-    printf "Transaction Quantity: %d\n" (length transactions)
-    printf "Account Quantity: %d\n" (length accounts)
-    printf "Transactions Outstanding: %d\n" (length (outstandingTransactions transactions))
-    printf "Transactions Future: %d\n" (length (futureTransactions transactions))
-    printf "Credits Quantity: %d\n"  (length credits)
-    printf "Debits Quantity: %d\n" (length debits)
---    print (sumOfActiveTransactions credits)
---    print (sumOfActiveTransactions debits)
---    print (sumOfActiveTransactions debits - sumOfActiveTransactions credits)
-    printf "Reoccurring Quantity: %d\n" (length reoccurring)
-    printf "Category Quantity: %d\n" (length categoriesCount)
+--    printf "Transaction Quantity: %d\n" (length transactions)
+--    printf "Account Quantity: %d\n" (length accounts)
+--    printf "Transactions Outstanding: %d\n" (length (outstandingTransactions transactions))
+--    printf "Transactions Future: %d\n" (length (futureTransactions transactions))
+--    printf "Credits Quantity: %d\n"  (length credits)
+--    printf "Debits Quantity: %d\n" (length debits)
+--    printf "Reoccurring Quantity: %d\n" (length reoccurring)
+--    printf "Category Quantity: %d\n" (length categoriesCount)
     return $ serve transactionApi (server transactions accounts)
 
 server :: [Transaction] -> [Account] -> Server TransactionApi
@@ -71,7 +76,7 @@ server transactions accounts =
   :<|> getTransactions transactions
   :<|> getTransactionById transactions
   :<|> getReport transactions
-  
+
 getTransactions :: [Transaction] -> Handler [Transaction]
 getTransactions = return
 
@@ -88,7 +93,15 @@ getReport transactions = return report
   where
     credits = transactionCredits transactions
     debits = transactionDebits transactions
-    report = Report (sumOfActiveTransactions debits) (sumOfActiveTransactions credits) (sumOfActiveTransactions debits - sumOfActiveTransactions credits)
+    transactionCount = length transactions
+    transactionOutstandingCount = length (outstandingTransactions transactions)
+    transactionFutureCount = length (futureTransactions transactions)
+    creditCount = length credits
+    debitCount = length debits
+    reoccurringCount = length (transactionsReoccurring transactions)
+    report = Report (sumOfActiveTransactions debits)
+                    (sumOfActiveTransactions credits) (sumOfActiveTransactions debits - sumOfActiveTransactions credits)
+                    transactionCount 0 transactionOutstandingCount transactionFutureCount creditCount debitCount reoccurringCount 0
 
 fromJust :: Maybe a -> a
 fromJust Nothing = error "Maybe.fromJust: Nothing"

@@ -48,6 +48,13 @@ loadTestData = do
   _ <- close connection
   putStrLn "--- separated ---"
 
+--getParm :: Maybe [Transaction] ->  [Transaction]
+--getParm transactions = result
+--  where
+--  right = Right transactions
+--  left = Left transactions
+--  result = if left == Nothing then error "no transactions to be had." else right
+
 spec :: Spec
 spec = do
     describe "test loaded data" $ do
@@ -115,7 +122,7 @@ spec = do
         length future `shouldBe` 0
 
       it "hasTransactionId of 1002" $ do
-        let result = hasTransactionId transaction 1002
+        let result = hasTransactionId 1002 transaction
         result `shouldBe` True
 
 main :: IO ()

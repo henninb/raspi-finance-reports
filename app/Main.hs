@@ -7,7 +7,6 @@ import Controller
 import System.Exit
 import System.Environment
 
-
 main :: IO ()
 main = do
   putStrLn "--- separated ---"

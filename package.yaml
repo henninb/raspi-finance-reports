@@ -13,7 +13,7 @@ extra-source-files:
 # synopsis:            Short description of your package
 # category:            Web
 
-description: Please see the README on GitHub at <https://github.com/githubuser/raspi-finance-reports#readme>
+description: Please see the README on GitHub at <https://github.com/bitexplorer/raspi-finance-reports#readme>
 
 dependencies:
 - base >= 4.7 && < 5
@@ -45,15 +45,10 @@ library:
     - uuid
     - random
     - MonadRandom
-    - acid-state
     - servant
     - servant-server
     - wai
     - warp
-    - http-types
-    - data-has
-    - safecopy
-    - transformers-either
 
 executables:
   raspi-finance-reports-exe:

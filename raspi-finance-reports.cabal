@@ -4,11 +4,11 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: acd3a4391c1d64e932c5b771e460a522db68c8451674e50821943499075923b8
+-- hash: b4064a224403d6eed4c309729557e16a49e24a48ba89b91409c430db7b21f427
 
 name:           raspi-finance-reports
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/githubuser/raspi-finance-reports#readme>
+description:    Please see the README on GitHub at <https://github.com/bitexplorer/raspi-finance-reports#readme>
 homepage:       https://github.com/bitexplorer/raspi-finance-reports#readme
 bug-reports:    https://github.com/bitexplorer/raspi-finance-reports/issues
 author:         Brian Henning
@@ -34,17 +34,14 @@ library
   build-depends:
       MissingH
     , MonadRandom
-    , acid-state
     , aeson
     , aeson-casing
     , aeson-pretty
     , base >=4.7 && <5
     , bytestring
     , containers
-    , data-has
     , directory
     , http-conduit
-    , http-types
     , lens
     , lens-aeson
     , mtl
@@ -53,14 +50,12 @@ library
     , postgresql-simple
     , pretty-simple
     , random
-    , safecopy
     , scientific
     , servant
     , servant-server
     , text
     , time
     , transformers
-    , transformers-either
     , uuid
     , vector
     , wai

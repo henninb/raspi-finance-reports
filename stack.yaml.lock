@@ -3,21 +3,7 @@
 # For more information, please see the documentation at:
 #   https://docs.haskellstack.org/en/stable/lock_files
 
-packages:
-- completed:
-    hackage: acid-state-0.16.0.1@sha256:d43f6ee0b23338758156c500290c4405d769abefeb98e9bc112780dae09ece6f,6207
-    pantry-tree:
-      size: 13678
-      sha256: d57bcb2ad5e01fe7424abbcf9e58cf943027b5c4a8496d93625c57b6e1272274
-  original:
-    hackage: acid-state-0.16.0.1
-- completed:
-    hackage: transformers-either-0.1.1@sha256:ec3d6fefd90e243b51aecebfc0ebc5db6381c261d473ea2df7ed7b501a8fb961,1501
-    pantry-tree:
-      size: 317
-      sha256: a69c9cbc1d8340c63cc8a9bbd718e13a41869d30a7c84d27be94bbc04ad73a69
-  original:
-    hackage: transformers-either-0.1.1
+packages: []
 snapshots:
 - completed:
     size: 532380

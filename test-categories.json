@@ -1,0 +1,14 @@
+[
+  {
+    "category": "online",
+    "categoryId": 1001
+  },
+  {
+    "category": "home",
+    "categoryId": 1002
+  },
+  {
+    "category": "restaurant",
+    "categoryId": 1003
+  }
+]

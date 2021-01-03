@@ -14,11 +14,14 @@ import Data.ByteString.Internal
 parseDay :: String -> Day
 parseDay = parseTimeOrError True defaultTimeLocale "%Y-%m-%d"
 
+insertCategory :: Connection -> Category -> IO Int64
+insertCategory connection = execute connection "INSERT INTO t_category(category, category_id, active_status, date_added, date_updated) VALUES(?, ?, true, now(), now())"
+
 insertAccount :: Connection -> Account -> IO Int64
-insertAccount connection = execute connection "INSERT INTO t_account(account_name_owner, account_id, account_type, active_status,  moniker, date_added, date_updated) VALUES(?, ?, ?, ?, ?, now(), now())"
+insertAccount connection = execute connection "INSERT INTO t_account(account_name_owner, account_id, account_type, active_status, moniker, date_added, date_updated) VALUES(?, ?, ?, ?, ?, now(), now())"
 
 insertTransaction :: Connection -> Transaction -> IO Int64
-insertTransaction connection = execute connection "INSERT INTO t_transaction (guid,description,category,account_type,account_name_owner,notes,transaction_state,account_id,transaction_id,reoccurring,active_status,transaction_date,amount) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)"
+insertTransaction connection = execute connection "INSERT INTO t_transaction (guid,description,category,account_type,account_name_owner,notes,transaction_state,account_id,transaction_id,reoccurring,active_status,transaction_date,amount,reoccurring_type,date_added, date_updated) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?, 'undefined', now(), now())"
 
 transaction :: Transaction
 transaction = Transaction "653fc2a9-14b9-4318-bcb3-178c59458f61" "test" "test" "credit" "chase_kari" "" "cleared" 1001 1002 True True (parseDay "2020-12-31") 0.0
@@ -34,15 +37,22 @@ loadTestData = do
   connection <- connectPostgreSQL connStr
   _ <- execute_ connection "TRUNCATE TABLE t_transaction RESTART IDENTITY CASCADE"
   _ <- execute_ connection "TRUNCATE TABLE t_account RESTART IDENTITY CASCADE"
-  payloadTransactions <- LB.readFile "test-transactions.json"
-  let eitherTransactions = eitherDecode payloadTransactions :: Either String [Transaction]
+  _ <- execute_ connection "TRUNCATE TABLE t_category RESTART IDENTITY CASCADE"
 
+  payloadCategories <- LB.readFile "test-categories.json"
+  let eitherCategories = eitherDecode payloadCategories :: Either String [Category]
+  
   payloadAccounts <- LB.readFile "test-accounts.json"
   let eitherAccounts = eitherDecode payloadAccounts :: Either String [Account]
 
+  payloadTransactions <- LB.readFile "test-transactions.json"
+  let eitherTransactions = eitherDecode payloadTransactions :: Either String [Transaction]
+
   let Right unwrappedTransactions = eitherTransactions
   let Right unwrappedAccounts = eitherAccounts
+  let Right unwrappedCategories = eitherCategories
 
+  mapM_ (insertCategory connection) unwrappedCategories
   mapM_ (insertAccount connection) unwrappedAccounts
   mapM_ (insertTransaction connection) unwrappedTransactions
   _ <- close connection

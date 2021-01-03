@@ -8,7 +8,7 @@ module Finance (lookupEnv, sumOfTransactions, extractCategories,
                 outstandingTransactions, futureTransactions, sortAndGroupByList, transactionsReoccurring, transactionDebits,
                 selectAllTransactions, selectAllAccounts, transactionCredits, someUUIDs, isCleared,
                 sumOfActiveTransactions, hasTransactionId, findByTransactionId,
-                Transaction(..), Account(..)) where
+                Transaction(..), Account(..), Category(..)) where
 
 import Data.Aeson
 import Data.Time

@@ -17,7 +17,7 @@
   {
     "transactionGuid": "653fc2a9-14b9-4318-bcb3-178c59458f62",
     "transactionDescription": "menards",
-    "transactionCategory": "",
+    "transactionCategory": "home",
     "transactionAccountType": "credit",
     "transactionAccountNameOwner": "chase_kari",
     "transactionNotes": "",
@@ -62,7 +62,7 @@
   {
     "transactionGuid": "653fc2a9-14b9-4318-bcb3-178c59458f65",
     "transactionDescription": "direct deposit",
-    "transactionCategory": "",
+    "transactionCategory": "online",
     "transactionAccountType": "debit",
     "transactionAccountNameOwner": "test_brian",
     "transactionNotes": "",
@@ -77,7 +77,7 @@
   {
     "transactionGuid": "653fc2a9-14b9-4318-bcb3-178c59458f66",
     "transactionDescription": "direct deposit",
-    "transactionCategory": "",
+    "transactionCategory": "online",
     "transactionAccountType": "debit",
     "transactionAccountNameOwner": "test_brian",
     "transactionNotes": "",

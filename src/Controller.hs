@@ -31,11 +31,11 @@ data Report = Report
     categoryCount :: Int
     } deriving (Show, Eq, Generic, ToJSON, FromJSON)
 
--- http://localhost:3000/
--- http://localhost:3000/transaction
--- http://localhost:3000/transaction/1001
--- http://localhost:3000/report
--- http://localhost:3000/optional?parm1=5
+-- curl 'http://localhost:3000/'
+-- curl 'http://localhost:3000/transaction'
+-- curl 'http://localhost:3000/transaction/1001'
+-- curl 'http://localhost:3000/report'
+-- curl 'http://localhost:3000/optional?parm1=5'
 type TransactionApi =
   Get '[JSON] String
   :<|> "transaction" :> Get '[JSON] [Transaction]

@@ -10,7 +10,7 @@
     "transactionTransactionState": "cleared",
     "transactionAccountId": 1001,
     "transactionTransactionId": 1001,
-    "transactionReoccurring": true,
+    "transactionReoccurringType": "onetime",
     "transactionTransactionDate": "2020-01-31",
     "transactionAmount": 10.01
   },
@@ -25,7 +25,7 @@
     "transactionTransactionState": "cleared",
     "transactionAccountId": 1001,
     "transactionTransactionId": 1002,
-    "transactionReoccurring": false,
+    "transactionReoccurringType": "onetime",
     "transactionTransactionDate": "2020-03-31",
     "transactionAmount": 21.01
   },
@@ -40,7 +40,7 @@
     "transactionTransactionState": "cleared",
     "transactionAccountId": 1002,
     "transactionTransactionId": 1003,
-    "transactionReoccurring": false,
+    "transactionReoccurringType": "onetime",
     "transactionTransactionDate": "2020-03-31",
     "transactionAmount": 24.34
   },
@@ -55,7 +55,7 @@
     "transactionTransactionState": "cleared",
     "transactionAccountId": 1002,
     "transactionTransactionId": 1004,
-    "transactionReoccurring": false,
+    "transactionReoccurringType": "onetime",
     "transactionTransactionDate": "2020-03-31",
     "transactionAmount": 18.33
   },
@@ -70,27 +70,12 @@
     "transactionTransactionState": "cleared",
     "transactionAccountId": 1003,
     "transactionTransactionId": 1005,
-    "transactionReoccurring": false,
+    "transactionReoccurringType": "onetime",
     "transactionTransactionDate": "2020-03-31",
     "transactionAmount": 900.05
   },
   {
-    "transactionGuid": "653fc2a9-14b9-4318-bcb3-178c59458f66",
-    "transactionDescription": "direct deposit",
-    "transactionCategory": "online",
-    "transactionAccountType": "debit",
-    "transactionAccountNameOwner": "test_brian",
-    "transactionNotes": "",
-    "transactionActiveStatus": false,
-    "transactionTransactionState": "future",
-    "transactionAccountId": 1003,
-    "transactionTransactionId": 1006,
-    "transactionReoccurring": true,
-    "transactionTransactionDate": "2020-03-29",
-    "transactionAmount": 1.00
-  },
-  {
-    "transactionGuid": "653fc2a9-14b9-4318-bcb3-178c59458f67",
+    "transactionGuid": "653fc2a9-14b9-4318-bcb3-178c59458f55",
     "transactionDescription": "amazon.com",
     "transactionCategory": "online",
     "transactionAccountType": "credit",
@@ -100,7 +85,7 @@
     "transactionTransactionState": "cleared",
     "transactionAccountId": 1002,
     "transactionTransactionId": 1007,
-    "transactionReoccurring": false,
+    "transactionReoccurringType": "onetime",
     "transactionTransactionDate": "2020-03-31",
     "transactionAmount": 14.19
   },
@@ -115,7 +100,7 @@
     "transactionTransactionState": "outstanding",
     "transactionAccountId": 1002,
     "transactionTransactionId": 1008,
-    "transactionReoccurring": false,
+    "transactionReoccurringType": "onetime",
     "transactionTransactionDate": "2020-05-31",
     "transactionAmount": 41.33
   }

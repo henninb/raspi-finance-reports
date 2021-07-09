@@ -35,14 +35,14 @@ data Report = Report
 -- curl 'http://localhost:3000/transaction'
 -- curl 'http://localhost:3000/transaction/1001'
 -- curl 'http://localhost:3000/report'
--- curl 'http://localhost:3000/optional?parm1=5'
+-- curl 'http://localhost:3000/optional?parameter1=5'
 type TransactionApi =
   Get '[JSON] String
   :<|> "transaction" :> Get '[JSON] [Transaction]
   :<|> "transaction" :> Capture "id" Integer :> Get '[JSON] Transaction
   :<|> "report" :> Get '[JSON] Report
 --  :<|> "optional" :> Get '[JSON] String
-  :<|> "optional" :> QueryParam "parm1" Int :> Get '[JSON] String  -- equivalent to 'GET /optional?parm1=test'
+  :<|> "optional" :> QueryParam "parameter1" Int :> Get '[JSON] String  -- equivalent to 'GET /optional?parameter1=test'
                        
 transactionApi :: Proxy TransactionApi
 transactionApi = Proxy
@@ -60,7 +60,7 @@ mkApp = do
     accounts <- selectAllAccounts connection
     let credits = transactionCredits transactions
     let debits = transactionDebits transactions
-    let reoccurring = transactionsReoccurring transactions
+--    let reoccurring = transactionsReoccurring transactions
     let categoriesList = extractCategories transactions
     let categoriesCount = sortAndGroupByList categoriesList
 
@@ -80,7 +80,7 @@ server transactions accounts =
   :<|> getTransactions transactions
   :<|> getTransactionById transactions
   :<|> getReport transactions
-  :<|> getParm
+  :<|> getParameter
 
 getTransactions :: [Transaction] -> Handler [Transaction]
 getTransactions = return
@@ -94,7 +94,6 @@ getRoot :: Handler String
 getRoot = return "{}"
 
 
-
 getReport :: [Transaction] -> Handler Report
 getReport transactions = return report
   where
@@ -105,23 +104,25 @@ getReport transactions = return report
     transactionFutureCount = length (futureTransactions transactions)
     creditCount = length credits
     debitCount = length debits
-    reoccurringCount = length (transactionsReoccurring transactions)
+    reoccurringCount = 0
+    categoryCount = 0
+    accountCount = 0
     report = Report (sumOfActiveTransactions debits)
                     (sumOfActiveTransactions credits) (sumOfActiveTransactions debits - sumOfActiveTransactions credits)
-                    transactionCount 0 transactionOutstandingCount transactionFutureCount creditCount debitCount reoccurringCount 0
+                    transactionCount accountCount transactionOutstandingCount transactionFutureCount creditCount debitCount reoccurringCount categoryCount
 
 fromJustCustom :: Maybe a -> a
 fromJustCustom Nothing = error "Maybe.fromJust: Nothing"
 fromJustCustom (Just x) = x
 
---getParm :: Maybe Int -> Handler String
---getParm i = return (show (fromJustCustom i))
+--getParameter :: Maybe Int -> Handler String
+--getParameter i = return (show (fromJustCustom i))
 
-getParm :: Maybe Int -> Handler String
-getParm parm = return result
+getParameter :: Maybe Int -> Handler String
+getParameter parameter = return result
   where
-  parm1 = fromMaybe 0 parm
-  result = if parm1 == 0 then "failure" else show parm1
+  parameter1 = fromMaybe 0 parameter
+  result = if parameter1 == 0 then "failure" else show parameter1
 
 --stringHandler = liftIO ioMaybeString >>= f
 --    where f (Just str) = return str

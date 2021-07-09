@@ -21,16 +21,26 @@ insertAccount :: Connection -> Account -> IO Int64
 insertAccount connection = execute connection "INSERT INTO t_account(account_name_owner, account_id, account_type, active_status, moniker, date_added, date_updated) VALUES(?, ?, ?, ?, ?, now(), now())"
 
 insertTransaction :: Connection -> Transaction -> IO Int64
-insertTransaction connection = execute connection "INSERT INTO t_transaction (guid,description,category,account_type,account_name_owner,notes,transaction_state,account_id,transaction_id,reoccurring,active_status,transaction_date,amount,reoccurring_type,date_added, date_updated) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?, 'undefined', now(), now())"
+--insertTransaction connection = execute connection "INSERT INTO t_transaction (guid,description,category,account_type,account_name_owner,notes,transaction_state,account_id,transaction_id,active_status,transaction_date,amount,reoccurring_type,date_added,date_updated) VALUES (?,?,?,?,?.?,?,?,?,?,?,?,?,now(),now())"
+insertTransaction connection = execute connection "INSERT INTO t_transaction (guid,description,category,account_type,account_name_owner,notes,transaction_state,account_id,transaction_id,reoccurring_type,active_status,transaction_date,amount,date_added, date_updated) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?, now(), now())"
 
-transaction :: Transaction
-transaction = Transaction "653fc2a9-14b9-4318-bcb3-178c59458f61" "test" "test" "credit" "chase_kari" "" "cleared" 1001 1002 True True (parseDay "2020-12-31") 0.0
+
+--transaction :: Transaction
+--transaction = Transaction "653fc2a9-14b9-4318-bcb3-178c59458f61" "test" "test" "credit" "chase_kari" "" "cleared" 1001 1002 True (parseDay "2021-7-9") 0.0
 
 account :: Account
 account = Account "chase_kari" 1001 "credit"  True "0000"
 
 connStr :: ByteString
 connStr = "host=localhost dbname=finance_test_db user=henninb password=monday1 port=5432"
+
+
+--eitherTransactions = eitherDecode payloadTransactions :: Either String [Transaction]
+
+--unwrappedTransactions1 :: Either String [Transaction] -> [Transaction]
+--unwrappedTransactions1 x = Right x
+
+
 
 loadTestData :: IO ()
 loadTestData = do
@@ -48,9 +58,11 @@ loadTestData = do
   payloadTransactions <- LB.readFile "test-transactions.json"
   let eitherTransactions = eitherDecode payloadTransactions :: Either String [Transaction]
 
-  let Right unwrappedTransactions = eitherTransactions
+
   let Right unwrappedAccounts = eitherAccounts
   let Right unwrappedCategories = eitherCategories
+  let Right unwrappedTransactions = eitherTransactions
+  --let unwrappedTransactions = (unwrappedTransactions1 eitherTransactions)
 
   mapM_ (insertCategory connection) unwrappedCategories
   mapM_ (insertAccount connection) unwrappedAccounts
@@ -110,12 +122,12 @@ spec = do
         _ <- close connection
         sumOfActiveTransactions debitsCleared `shouldBe` 900.05
 
-      it "count of reoccurring transactions" $ do
-        connection <- connectPostgreSQL connStr
-        transactions <- selectAllTransactions connection
-        let reoccurring = transactionsReoccurring transactions
-        _ <- close connection
-        length reoccurring `shouldBe` 1
+--      it "count of reoccurring transactions" $ do
+--        connection <- connectPostgreSQL connStr
+--        transactions <- selectAllTransactions connection
+--        let reoccurring = transactionsReoccurring transactions
+--        _ <- close connection
+--        length reoccurring `shouldBe` 1
 
       it "count of outstanding transactions" $ do
         connection <- connectPostgreSQL connStr
@@ -131,9 +143,9 @@ spec = do
         _ <- close connection
         length future `shouldBe` 0
 
-      it "hasTransactionId of 1002" $ do
-        let result = hasTransactionId 1002 transaction
-        result `shouldBe` True
+--      it "hasTransactionId of 1002" $ do
+--        let result = hasTransactionId 1002 transaction
+--        result `shouldBe` True
 
 main :: IO ()
 main = do

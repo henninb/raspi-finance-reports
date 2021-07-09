@@ -5,7 +5,7 @@
 
 
 module Finance (lookupEnv, sumOfTransactions, extractCategories,
-                outstandingTransactions, futureTransactions, sortAndGroupByList, transactionsReoccurring, transactionDebits,
+                outstandingTransactions, futureTransactions, sortAndGroupByList, transactionDebits,
                 selectAllTransactions, selectAllAccounts, transactionCredits, someUUIDs, isCleared,
                 sumOfActiveTransactions, hasTransactionId, findByTransactionId,
                 Transaction(..), Account(..), Category(..)) where
@@ -52,11 +52,13 @@ data Transaction = Transaction
       transactionTransactionState  :: String,
       transactionAccountId  :: Integer,
       transactionTransactionId  :: Integer,
-      transactionReoccurring   :: Bool,
+      transactionReoccurringType   :: String,
       transactionActiveStatus  :: Bool,
       transactionTransactionDate  :: Day,
       transactionAmount   :: Scientific
     } deriving (Show, Eq, Ord, Generic, ToJSON, FromJSON)
+
+--guid,description,category,account_type,account_name_owner,notes,transaction_state,account_id,transaction_id,reoccurring_type,active_status,transaction_date,amount
 
 instance FromRow Transaction
 instance ToRow Transaction
@@ -115,8 +117,8 @@ isDebit x = transactionAccountType x == "debit"
 isActive :: Transaction -> Bool
 isActive = transactionActiveStatus
 
-isReoccurring :: Transaction -> Bool
-isReoccurring = transactionReoccurring
+--isReoccurring :: Transaction -> Bool
+--isReoccurring = transactionReoccurring
 
 transactionCredits :: [Transaction] -> [Transaction]
 transactionCredits = filter isCredit
@@ -124,8 +126,8 @@ transactionCredits = filter isCredit
 transactionDebits :: [Transaction] -> [Transaction]
 transactionDebits = filter isDebit
 
-transactionsReoccurring :: [Transaction] -> [Transaction]
-transactionsReoccurring = filter isReoccurring
+--transactionsReoccurring :: [Transaction] -> [Transaction]
+--transactionsReoccurring = filter isReoccurring
 
 extractCategories :: [Transaction] -> [String]
 extractCategories xs = transactionCategory <$> xs
@@ -134,7 +136,7 @@ sortAndGroupByList :: Ord a => [a] -> [(a, Int)]
 sortAndGroupByList transactions = map (head &&& length) $ group $ sort transactions
 
 selectAllTransactions :: Connection -> IO [Transaction]
-selectAllTransactions connection = query_ connection "SELECT guid,description,category,account_type,account_name_owner,notes,transaction_state,account_id,transaction_id,reoccurring,active_status,transaction_date,amount FROM t_transaction WHERE active_status='true'" :: IO [Transaction]
+selectAllTransactions connection = query_ connection "SELECT guid,description,category,account_type,account_name_owner,notes,transaction_state,account_id,transaction_id,reoccurring_type,active_status,transaction_date,amount FROM t_transaction WHERE active_status='true'" :: IO [Transaction]
 
 selectAllAccounts :: Connection -> IO [Account]
 selectAllAccounts connection = query_ connection "SELECT account_name_owner,account_id,account_type,active_status,moniker FROM t_account WHERE active_status='true'" :: IO [Account]

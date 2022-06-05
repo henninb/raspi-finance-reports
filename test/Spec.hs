@@ -51,7 +51,7 @@ loadTestData = do
 
   payloadCategories <- LB.readFile "test-categories.json"
   let eitherCategories = eitherDecode payloadCategories :: Either String [Category]
-  
+
   payloadAccounts <- LB.readFile "test-accounts.json"
   let eitherAccounts = eitherDecode payloadAccounts :: Either String [Account]
 

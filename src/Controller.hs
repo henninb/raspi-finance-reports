@@ -43,7 +43,7 @@ type TransactionApi =
   :<|> "report" :> Get '[JSON] Report
 --  :<|> "optional" :> Get '[JSON] String
   :<|> "optional" :> QueryParam "parameter1" Int :> Get '[JSON] String  -- equivalent to 'GET /optional?parameter1=test'
-                       
+
 transactionApi :: Proxy TransactionApi
 transactionApi = Proxy
 
@@ -55,7 +55,7 @@ apiService = do
 
 mkApp :: IO Application
 mkApp = do
-    connection <- connect defaultConnectInfo { connectHost = "192.168.100.124", connectDatabase = "finance_db", connectUser = "henninb", connectPassword = "monday1"}
+    connection <- connect defaultConnectInfo { connectHost = "192.168.10.25", connectDatabase = "finance_db", connectUser = "henninb", connectPassword = "monday1"}
     transactions <- selectAllTransactions connection
     accounts <- selectAllAccounts connection
     let credits = transactionCredits transactions

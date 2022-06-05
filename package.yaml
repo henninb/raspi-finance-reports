@@ -51,7 +51,7 @@ library:
     - warp
 
 executables:
-  raspi-finance-reports-exe:
+  raspi-finance-reports:
     main: Main.hs
     source-dirs: app
     ghc-options:

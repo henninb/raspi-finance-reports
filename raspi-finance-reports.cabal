@@ -3,8 +3,6 @@ cabal-version: 1.12
 -- This file has been generated from package.yaml by hpack version 0.34.4.
 --
 -- see: https://github.com/sol/hpack
---
--- hash: 36fa3b10015eb2690ee99d23ae7dd4fd7ce56ba23ac28fe8b7fb0ccf583c6951
 
 name:           raspi-finance-reports
 version:        0.1.0.0
@@ -61,7 +59,7 @@ library
     , wreq
   default-language: Haskell2010
 
-executable raspi-finance-reports-exe
+executable raspi-finance-reports
   main-is: Main.hs
   other-modules:
       Paths_raspi_finance_reports

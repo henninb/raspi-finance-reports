@@ -1,10 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.33.0.
+-- This file has been generated from package.yaml by hpack version 0.34.4.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b4064a224403d6eed4c309729557e16a49e24a48ba89b91409c430db7b21f427
+-- hash: 36fa3b10015eb2690ee99d23ae7dd4fd7ce56ba23ac28fe8b7fb0ccf583c6951
 
 name:           raspi-finance-reports
 version:        0.1.0.0
@@ -16,8 +16,6 @@ maintainer:     henninb@msn.com
 copyright:      2020
 license:        BSD3
 build-type:     Simple
-extra-source-files:
-    README.md
 
 source-repository head
   type: git

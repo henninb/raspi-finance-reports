@@ -6,8 +6,8 @@ author:              "Brian Henning"
 maintainer:          "henninb@msn.com"
 copyright:           "2020"
 
-extra-source-files:
-- README.md
+# extra-source-files:
+# - README.md
 
 # Metadata used when publishing your package
 # synopsis:            Short description of your package

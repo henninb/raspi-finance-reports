@@ -133,7 +133,7 @@ extractCategories :: [Transaction] -> [String]
 extractCategories xs = transactionCategory <$> xs
 
 sortAndGroupByList :: Ord a => [a] -> [(a, Int)]
-sortAndGroupByList transactions = map (head &&& length) $ group $ sort transactions
+sortAndGroupByList transactions = map (\g@(x:_) -> (x, length g)) $ group $ sort transactions
 
 selectAllTransactions :: Connection -> IO [Transaction]
 selectAllTransactions connection = query_ connection "SELECT guid,description,category,account_type,account_name_owner,notes,transaction_state,account_id,transaction_id,reoccurring_type,active_status,transaction_date,amount FROM t_transaction WHERE active_status='true'" :: IO [Transaction]

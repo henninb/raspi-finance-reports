@@ -34,7 +34,7 @@ data Report = Report
 -- curl 'http://localhost:3000/'
 -- curl 'http://localhost:3000/transaction'
 -- curl 'http://localhost:3000/transaction/1001'
--- curl 'http://localhost:3000/report'
+-- curl 'http://localhost:8080/report'
 -- curl 'http://localhost:3000/optional?parameter1=5'
 type TransactionApi =
   Get '[JSON] String
@@ -49,13 +49,13 @@ transactionApi = Proxy
 
 apiService :: IO ()
 apiService = do
-  let port = 3000
+  let port = 8080
   let settings =  setPort port $ setBeforeMainLoop (hPutStrLn stderr ("listening on port " ++ show port)) defaultSettings
   runSettings settings =<< mkApp
 
 mkApp :: IO Application
 mkApp = do
-    connection <- connect defaultConnectInfo { connectHost = "192.168.10.25", connectDatabase = "finance_db", connectUser = "henninb", connectPassword = "monday1"}
+    connection <- connect defaultConnectInfo { connectHost = "postgresql.bhenning.com", connectDatabase = "finance_db", connectUser = "henninb", connectPassword = "monday1"}
     transactions <- selectAllTransactions connection
     accounts <- selectAllAccounts connection
     let credits = transactionCredits transactions

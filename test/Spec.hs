@@ -29,7 +29,7 @@ insertTransaction connection = execute connection "INSERT INTO t_transaction (gu
 --transaction = Transaction "653fc2a9-14b9-4318-bcb3-178c59458f61" "test" "test" "credit" "chase_kari" "" "cleared" 1001 1002 True (parseDay "2021-7-9") 0.0
 
 account :: Account
-account = Account "chase_kari" 1001 "credit"  True "0000"
+account = Account "chase_kari" 1001 "credit" True "0000" "henninb" 0.0 0.0 0.0
 
 connStr :: ByteString
 connStr = "host=localhost dbname=finance_test_db user=henninb password=monday1 port=5432"

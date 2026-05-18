@@ -1,129 +1,98 @@
-{-# LANGUAGE TypeOperators #-}
-{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE DeriveGeneric  #-}
-{-# LANGUAGE DeriveAnyClass #-}
 
-module Controller where
+module Controller (runMenu) where
+
 import Finance
-import Network.Wai
-import Network.Wai.Handler.Warp
-import Servant
-import System.IO
 import Database.PostgreSQL.Simple
+import System.IO (hFlush, stdout)
 import Text.Printf
-import GHC.Generics
-import Data.Aeson
-import Data.Scientific
-import Data.Maybe
 
-data Report = Report
-    {debits :: Scientific,
-    credits :: Scientific,
-    totals  :: Scientific,
-    transactionCount :: Int,
-    accountCount :: Int,
-    transactionOutstandingCount :: Int,
-    transactionFutureCount :: Int,
-    creditCount :: Int,
-    debitCount :: Int,
-    reoccurringCount :: Int,
-    categoryCount :: Int
-    } deriving (Show, Eq, Generic, ToJSON, FromJSON)
+type MenuAction = Connection -> IO ()
 
--- curl 'http://localhost:3000/'
--- curl 'http://localhost:3000/transaction'
--- curl 'http://localhost:3000/transaction/1001'
--- curl 'http://localhost:8080/report'
--- curl 'http://localhost:3000/optional?parameter1=5'
-type TransactionApi =
-  Get '[JSON] String
-  :<|> "transaction" :> Get '[JSON] [Transaction]
-  :<|> "transaction" :> Capture "id" Integer :> Get '[JSON] Transaction
-  :<|> "report" :> Get '[JSON] Report
---  :<|> "optional" :> Get '[JSON] String
-  :<|> "optional" :> QueryParam "parameter1" Int :> Get '[JSON] String  -- equivalent to 'GET /optional?parameter1=test'
+menuItems :: [(String, MenuAction)]
+menuItems =
+  [ ("Transactions with double spaces",       reportDoubleSpaces)
+  , ("Orphaned descriptions",                 reportOrphanedDescriptions)
+  , ("Orphaned categories",                   reportOrphanedCategories)
+  , ("Orphaned receipt images",               reportOrphanedReceiptImages)
+  , ("Descriptions used more than 10 times",  reportFrequentDescriptions)
+  , ("Cleared transaction count by week",     reportWeeklyCleared)
+  , ("Cleared transaction count by month",    reportMonthlyCleared)
+  ]
 
-transactionApi :: Proxy TransactionApi
-transactionApi = Proxy
+printMenu :: IO ()
+printMenu = do
+  putStrLn "\n=== Finance Data Quality Reports ==="
+  mapM_ (\(i, (label, _)) -> printf "  %d. %s\n" (i :: Int) label) (zip [1..] menuItems)
+  putStrLn "  0. Exit"
+  putStr "\nSelect an option: "
+  hFlush stdout
 
-apiService :: IO ()
-apiService = do
-  let port = 8080
-  let settings =  setPort port $ setBeforeMainLoop (hPutStrLn stderr ("listening on port " ++ show port)) defaultSettings
-  runSettings settings =<< mkApp
+runMenu :: Connection -> IO ()
+runMenu conn = do
+  printMenu
+  line <- getLine
+  case reads line :: [(Int, String)] of
+    [(0, "")] -> putStrLn "Goodbye."
+    [(n, "")] | n >= 1 && n <= length menuItems -> do
+      let (_, action) = menuItems !! (n - 1)
+      action conn
+      runMenu conn
+    _ -> do
+      putStrLn "Invalid option, try again."
+      runMenu conn
 
-mkApp :: IO Application
-mkApp = do
-    connection <- connect defaultConnectInfo { connectHost = "postgresql.bhenning.com", connectDatabase = "finance_db", connectUser = "henninb", connectPassword = "monday1"}
-    transactions <- selectAllTransactions connection
-    accounts <- selectAllAccounts connection
-    let credits = transactionCredits transactions
-    let debits = transactionDebits transactions
---    let reoccurring = transactionsReoccurring transactions
-    let categoriesList = extractCategories transactions
-    let categoriesCount = sortAndGroupByList categoriesList
+reportDoubleSpaces :: MenuAction
+reportDoubleSpaces conn = do
+  results <- selectTransactionsWithDoubleSpaces conn
+  printf "\n--- Transactions with double spaces (%d) ---\n" (length results)
+  mapM_ printTransaction results
 
---    printf "Transaction Quantity: %d\n" (length transactions)
---    printf "Account Quantity: %d\n" (length accounts)
---    printf "Transactions Outstanding: %d\n" (length (outstandingTransactions transactions))
---    printf "Transactions Future: %d\n" (length (futureTransactions transactions))
---    printf "Credits Quantity: %d\n"  (length credits)
---    printf "Debits Quantity: %d\n" (length debits)
---    printf "Reoccurring Quantity: %d\n" (length reoccurring)
---    printf "Category Quantity: %d\n" (length categoriesCount)
-    return $ serve transactionApi (server transactions accounts)
+reportOrphanedDescriptions :: MenuAction
+reportOrphanedDescriptions conn = do
+  results <- selectOrphanedDescriptions conn
+  printf "\n--- Orphaned descriptions (%d) ---\n" (length results)
+  mapM_ (\d -> printf "  [%d] %s  (owner: %s)\n"
+    (descriptionId d) (descriptionName d) (descriptionOwner d)) results
 
-server :: [Transaction] -> [Account] -> Server TransactionApi
-server transactions accounts =
-  getRoot
-  :<|> getTransactions transactions
-  :<|> getTransactionById transactions
-  :<|> getReport transactions
-  :<|> getParameter
+reportOrphanedCategories :: MenuAction
+reportOrphanedCategories conn = do
+  results <- selectOrphanedCategories conn
+  printf "\n--- Orphaned categories (%d) ---\n" (length results)
+  mapM_ (\c -> printf "  [%d] %s  (owner: %s)\n"
+    (categoryId c) (categoryName c) (categoryOwner c)) results
 
-getTransactions :: [Transaction] -> Handler [Transaction]
-getTransactions = return
+reportOrphanedReceiptImages :: MenuAction
+reportOrphanedReceiptImages conn = do
+  results <- selectOrphanedReceiptImages conn
+  printf "\n--- Orphaned receipt images (%d) ---\n" (length results)
+  mapM_ (\r -> printf "  [%d] transaction_id: %d  owner: %s  format: %s\n"
+    (receiptImageId r) (receiptImageTransactionId r)
+    (receiptImageOwner r) (receiptImageFormatType r)) results
 
--- http://localhost:3000/transaction/1001
-getTransactionById :: [Transaction] -> Integer -> Handler Transaction
-getTransactionById transactions x = return (fromJustCustom (findByTransactionId x transactions))
---getTransactionById _ _ = throwError err404
+reportFrequentDescriptions :: MenuAction
+reportFrequentDescriptions conn = do
+  results <- selectDescriptionsUsedMoreThanTenTimes conn
+  printf "\n--- Descriptions used more than 10 times (%d) ---\n" (length results)
+  mapM_ (\d -> printf "  %4d  %s\n" (descriptionCount d) (descriptionCountName d)) results
 
-getRoot :: Handler String
-getRoot = return "{}"
+reportWeeklyCleared :: MenuAction
+reportWeeklyCleared conn = do
+  results <- selectClearedTransactionCountByWeek conn
+  printf "\n--- Cleared transaction count by week (%d weeks) ---\n" (length results)
+  mapM_ (\w -> printf "  %s  %d\n" (show (weekStart w)) (clearedCount w)) results
 
+reportMonthlyCleared :: MenuAction
+reportMonthlyCleared conn = do
+  results <- selectClearedTransactionCountByMonth conn
+  printf "\n--- Cleared transaction count by month (%d months) ---\n" (length results)
+  mapM_ (\m -> printf "  %s  %d\n" (show (monthStart m)) (monthlyClearedCount m)) results
 
-getReport :: [Transaction] -> Handler Report
-getReport transactions = return report
-  where
-    credits = transactionCredits transactions
-    debits = transactionDebits transactions
-    transactionCount = length transactions
-    transactionOutstandingCount = length (outstandingTransactions transactions)
-    transactionFutureCount = length (futureTransactions transactions)
-    creditCount = length credits
-    debitCount = length debits
-    reoccurringCount = 0
-    categoryCount = 0
-    accountCount = 0
-    report = Report (sumOfActiveTransactions debits)
-                    (sumOfActiveTransactions credits) (sumOfActiveTransactions debits - sumOfActiveTransactions credits)
-                    transactionCount accountCount transactionOutstandingCount transactionFutureCount creditCount debitCount reoccurringCount categoryCount
-
-fromJustCustom :: Maybe a -> a
-fromJustCustom Nothing = error "Maybe.fromJust: Nothing"
-fromJustCustom (Just x) = x
-
---getParameter :: Maybe Int -> Handler String
---getParameter i = return (show (fromJustCustom i))
-
-getParameter :: Maybe Int -> Handler String
-getParameter parameter = return result
-  where
-  parameter1 = fromMaybe 0 parameter
-  result = if parameter1 == 0 then "failure" else show parameter1
-
---stringHandler = liftIO ioMaybeString >>= f
---    where f (Just str) = return str
---          f Nothing = throwError err404
+printTransaction :: Transaction -> IO ()
+printTransaction t =
+  printf "  [%d] %-40s  %-30s  %-12s  %s\n"
+    (transactionTransactionId t)
+    (transactionDescription t)
+    (transactionAccountNameOwner t)
+    (transactionTransactionState t)
+    (show (transactionAmount t))

@@ -2,24 +2,21 @@
 
 module Main where
 
-import Finance
 import Controller
-import System.Exit
-import System.Environment
+import Database.PostgreSQL.Simple
+import System.Environment (lookupEnv)
+import Data.Maybe (fromMaybe)
 
 main :: IO ()
 main = do
-  putStrLn "--- separated ---"
-  programName <- getProgName
-  args <- getArgs
-  if "-h" `elem` args || "--help" `elem` args then
-    print (programName ++ " help") >> exitSuccess
-  else if "-v" `elem` args || "--version" `elem` args then
-    print (programName ++ "version") >> exitSuccess
-  else
-    print "running main program..."
-  putStrLn "--- separated ---"
-  postgresqlUsername <- lookupEnv "POSTGRESQL_USESRNAME"
-  postgresqlPassword <- lookupEnv "POSTGRESQL_PASSWORD"
-  putStrLn "--- separated ---"
-  apiService
+  host     <- fromMaybe "postgresql.bhenning.com" <$> lookupEnv "POSTGRESQL_HOST"
+  database <- fromMaybe "finance_db"              <$> lookupEnv "POSTGRESQL_DATABASE"
+  username <- fromMaybe "henninb"                 <$> lookupEnv "POSTGRESQL_USERNAME"
+  password <- fromMaybe "monday1"                 <$> lookupEnv "POSTGRESQL_PASSWORD"
+  conn <- connect defaultConnectInfo
+    { connectHost     = host
+    , connectDatabase = database
+    , connectUser     = username
+    , connectPassword = password
+    }
+  runMenu conn

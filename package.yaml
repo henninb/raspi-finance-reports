@@ -60,6 +60,7 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - raspi-finance-reports
+    - postgresql-simple
 tests:
   raspi-finance-reports-test:
     main: Spec.hs

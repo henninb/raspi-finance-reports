@@ -49,13 +49,13 @@ loadTestData = do
   _ <- execute_ connection "TRUNCATE TABLE t_account RESTART IDENTITY CASCADE"
   _ <- execute_ connection "TRUNCATE TABLE t_category RESTART IDENTITY CASCADE"
 
-  payloadCategories <- LB.readFile "test-categories.json"
+  payloadCategories <- LB.readFile "test/test-categories.json"
   let eitherCategories = eitherDecode payloadCategories :: Either String [Category]
 
-  payloadAccounts <- LB.readFile "test-accounts.json"
+  payloadAccounts <- LB.readFile "test/test-accounts.json"
   let eitherAccounts = eitherDecode payloadAccounts :: Either String [Account]
 
-  payloadTransactions <- LB.readFile "test-transactions.json"
+  payloadTransactions <- LB.readFile "test/test-transactions.json"
   let eitherTransactions = eitherDecode payloadTransactions :: Either String [Transaction]
 
 

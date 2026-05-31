@@ -49,6 +49,10 @@ library:
     - servant-server
     - wai
     - warp
+    - brick
+    - vty
+    - microlens
+    - microlens-mtl
 
 executables:
   raspi-finance-reports:

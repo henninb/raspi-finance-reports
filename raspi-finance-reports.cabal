@@ -34,12 +34,15 @@ library
     , aeson-casing
     , aeson-pretty
     , base >=4.7 && <5
+    , brick
     , bytestring
     , containers
     , directory
     , http-conduit
     , lens
     , lens-aeson
+    , microlens
+    , microlens-mtl
     , mtl
     , numbers
     , optparse-applicative
@@ -54,6 +57,7 @@ library
     , transformers
     , uuid
     , vector
+    , vty
     , wai
     , warp
     , wreq
